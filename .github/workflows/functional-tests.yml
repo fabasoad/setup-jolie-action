@@ -1,0 +1,28 @@
+---
+name: Functional Tests
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'fix-*'
+      - 'feature-*'
+
+jobs:
+  setup-jolie:
+    name: Setup jolie
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        version: ['1.11.0-alpha', '1.10.13']
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Print version
+        run: graudit -v
+        shell: bash

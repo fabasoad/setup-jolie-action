@@ -1,0 +1,21 @@
+---
+name: 'Setup Jolie'
+author: Yevhen Fabizhevskyi
+description: 'Set up a specific version of Jolie.'
+branding:
+  icon: terminal
+  color: gray-dark
+inputs:
+  version:
+    description: 'Jolie version.'
+    required: false
+    default: '1.10.13'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Jolie
+      run: |
+        git clone --depth 1 --branch v${{ inputs.version }} https://github.com/wireghoul/graudit.git
+        echo "${{ github.action_path }}/graudit" >> $GITHUB_PATH
+        echo "GRDIR=$(pwd)/graudit/signatures" >> $GITHUB_ENV
+      shell: bash
