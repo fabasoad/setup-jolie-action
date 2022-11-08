@@ -20,9 +20,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
+      - name: Setup Jolie
+        uses: ./
         with:
           version: ${{ matrix.version }}
       - name: Print version
-        run: graudit -v
+        run: jolie --version
         shell: bash

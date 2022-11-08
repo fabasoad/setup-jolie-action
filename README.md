@@ -9,8 +9,14 @@ This action installs [Jolie](https://www.jolie-lang.org).
 ## Prerequisites
 
 **One** of the following tools have to be installed for successful work of this
-GitHub action: [brew](https://brew.sh), [java](https://www.java.com) (for the
-correct version of java please follow the instructions [here](https://www.jolie-lang.org/downloads.html)).
+GitHub action:
+
+- [brew](https://brew.sh)
+- [curl](https://curl.se), [java](https://www.java.com) (for the correct version
+  of java please follow the instructions [here](https://www.jolie-lang.org/downloads.html))
+
+**One** of the following tools have to be installed for successful work of this
+GitHub action: [brew](https://brew.sh), [java](https://www.java.com) .
 
 ## Inputs
 
@@ -30,19 +36,19 @@ on: push
 jobs:
   setup:
     name: graudit
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@main
       - uses: fabasoad/setup-jolie-action@main
         with:
-          version: 3.4
+          version: 1.11.0-alpha
       - name: Print version
-        run: graudit -v
+        run: jolie --version
 ```
 
 ### Result
 
 ```shell
-Run graudit -v
+Run jolie --version
 graudit version: 3.4
 ```
