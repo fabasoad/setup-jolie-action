@@ -24,19 +24,30 @@ runs:
         echo "JOLIE_PATH=$RUNNER_TEMP/jolie" >> $GITHUB_OUTPUT
         echo "DOWNLOAD_URL=https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Download jolie (Linux, macOS)
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os != 'Windows' }}
-      run: wget -O jolie.jar ${{ steps.info.outputs.DOWNLOAD_URL }}
-      shell: bash
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
-    - name: Download jolie (Windows)
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os == 'Windows' }}
-      run: Invoke-WebRequest -URI ${{ steps.info.outputs.DOWNLOAD_URL }} -OutFile jolie.jar
-      shell: pwsh
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
     - name: Install jolie
       run: |
-        echo "${{ steps.info.outputs.JOLIE_PATH }}" | java -jar jolie.jar
-        rm -f jolie.jar
+        git clone --depth 1 --branch v${{ inputs.version }} https://github.com/jolie/jolie.git
+        cd jolie
+        mvn install -Dmaven.test.skip=true
+        bin_path="${{ steps.info.outputs.JOLIE_PATH }}/bin"
+        mkdir $bin_path
+        ./scripts/dev-setup.sh $bin_path
+        echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Download jolie (Linux, macOS)
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os != 'Windows' }}
+#      run: wget -O jolie.jar ${{ steps.info.outputs.DOWNLOAD_URL }}
+#      shell: bash
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Download jolie (Windows)
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os == 'Windows' }}
+#      run: Invoke-WebRequest -URI ${{ steps.info.outputs.DOWNLOAD_URL }} -OutFile jolie.jar
+#      shell: pwsh
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Install jolie
+#      run: |
+#        echo "${{ steps.info.outputs.JOLIE_PATH }}" | java -jar jolie.jar
+#        rm -f jolie.jar
+#      shell: bash
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
