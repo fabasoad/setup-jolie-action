@@ -22,12 +22,23 @@ runs:
         echo "BREW_INSTALLED=$BREW_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$RUNNER_TEMP/jolie"
         echo "JOLIE_PATH=$RUNNER_TEMP/jolie" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL=https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Install Jolie
+    - name: Download jolie (Linux, macOS)
+      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os != 'Windows' }}
+      run: wget -O jolie.jar ${{ steps.info.outputs.DOWNLOAD_URL }}
+      shell: bash
+      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+    - name: Download jolie (Windows)
+      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os == 'Windows' }}
+      run: Invoke-WebRequest -URI ${{ steps.info.outputs.DOWNLOAD_URL }} -OutFile jolie.jar
+      shell: pwsh
+      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+    - name: Install jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
-        wget -O jolie.jar https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar
         java -jar jolie.jar
+        rm -f jolie.jar
         env
         which jolie
       shell: bash
