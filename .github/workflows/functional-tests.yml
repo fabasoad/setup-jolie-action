@@ -24,8 +24,6 @@ jobs:
             java-version: '11'
           - version: '1.10.0'
             java-version: '8'
-          - version: '1.8.1'
-            java-version: '8'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -54,15 +52,15 @@ jobs:
             java-version: '11'
           - version: '1.10.0'
             java-version: '8'
-          - version: '1.8.1'
-            java-version: '8'
     runs-on: ubuntu-latest
     container:
       image: alpine:latest
     steps:
       - uses: actions/checkout@v3
       - name: Install tools
-        run: apk add --update bash
+        run: |
+          apk update
+          apk add --update bash maven
         shell: sh
       - name: Setup Java
         uses: actions/setup-java@v3
