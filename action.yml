@@ -16,10 +16,25 @@ runs:
     - name: Collect info
       id: info
       run: |
+        REALPATH_INSTALLED=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
+        echo "REALPATH_INSTALLED=$REALPATH_INSTALLED" >> $GITHUB_OUTPUT
         JOLIE_INSTALLED=$(if command -v jolie >/dev/null 2>&1; then echo true; else echo false; fi)
         echo "JOLIE_INSTALLED=$JOLIE_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$GITHUB_WORKSPACE/jolie"
         echo "JOLIE_PATH=$GITHUB_WORKSPACE/jolie" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Install tools
+      if: ${{ steps.info.outputs.REALPATH_INSTALLED == 'false' && runner.os != 'Windows' }}
+      run: |
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          if [[ -f "/etc/alpine-release" ]]; then
+            apk add coreutils
+          else
+            apt-get install realpath
+          fi
+        else
+          brew install realpath
+        fi
       shell: bash
     - name: Download jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
