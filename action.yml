@@ -33,7 +33,7 @@ runs:
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
         mvn install -Dmaven.test.skip=true
-        bin_path="$(pwd)/$(date '+%Y%m%d%H%M%S')"
+        bin_path="$(pwd)/bin_$(date '+%Y%m%d%H%M%S')"
         mkdir $bin_path
         echo "$bin_path" >> $GITHUB_PATH
         ./scripts/dev-setup.sh $bin_path
