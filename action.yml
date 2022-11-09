@@ -39,7 +39,5 @@ runs:
       run: |
         java -jar jolie.jar
         rm -f jolie.jar
-        env
-        which jolie
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
