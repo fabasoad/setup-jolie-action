@@ -30,8 +30,8 @@ runs:
         git clone --depth 1 --branch v${{ inputs.version }} https://github.com/jolie/jolie.git
         cd jolie
         mvn install -Dmaven.test.skip=true
-        p=$(find dist/ -name "jolie*.jar")
-        echo $p
+        mkdir ${{ steps.info.outputs.JOLIE_PATH }}/bin
+        bash ./scripts/dev-setup.sh "${{ steps.info.outputs.JOLIE_PATH }}"/bin
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
 #    - name: Install jolie (Linux, macOS)
