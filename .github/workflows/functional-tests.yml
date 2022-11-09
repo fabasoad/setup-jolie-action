@@ -13,13 +13,19 @@ jobs:
     name: Setup jolie
     timeout-minutes: 5
     strategy:
+      fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         version: ['1.11.0-alpha', '1.10.13']
-      fail-fast: false
+        java-version: ['11']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: adopt
       - name: Setup Jolie
         uses: ./
         with:
