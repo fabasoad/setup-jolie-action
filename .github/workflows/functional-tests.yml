@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
-        version: ['1.11.0-alpha', '1.10.13', '1.10.0', '1.5.0']
+        version: ['1.11.0-alpha', '1.10.13', '1.10.0', '1.8.1']
         include:
           - version: '1.11.0-alpha'
             java-version: '11'
@@ -24,8 +24,8 @@ jobs:
             java-version: '11'
           - version: '1.10.0'
             java-version: '8'
-          - version: '1.5.0'
-            java-version: '6'
+          - version: '1.8.1'
+            java-version: '8'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

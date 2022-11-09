@@ -29,6 +29,7 @@ runs:
         ref: v${{ inputs.version }}
         fetch-depth: 1
         path: jolie
+        cache: maven
     - name: Install jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
