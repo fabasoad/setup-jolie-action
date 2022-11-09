@@ -29,12 +29,11 @@ runs:
         ref: v${{ inputs.version }}
         fetch-depth: 1
         path: jolie
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
     - name: Install jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
         mvn install -Dmaven.test.skip=true
-        bin_path="$(pwd)/bin"
+        bin_path="$(pwd)/$(date '+%Y%m%d%H%M%S')"
         mkdir $bin_path
         echo "$bin_path" >> $GITHUB_PATH
         ./scripts/dev-setup.sh $bin_path
