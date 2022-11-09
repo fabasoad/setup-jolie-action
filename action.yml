@@ -20,23 +20,25 @@ runs:
         echo "JOLIE_INSTALLED=$JOLIE_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$RUNNER_TEMP/jolie"
         echo "JOLIE_PATH=$RUNNER_TEMP/jolie" >> $GITHUB_OUTPUT
+        echo $GITHUB_WORKSPACE
+        echo $RUNNER_TEMP
       shell: bash
-    - name: Download jolie
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
-      uses: actions/checkout@v3
-      with:
-        repository: jolie/jolie
-        ref: v${{ inputs.version }}
-        fetch-depth: 1
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
-    - name: Install jolie
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
-      run: |
-        mvn install -Dmaven.test.skip=true
-        bin_path="$(pwd)/bin"
-        mkdir $bin_path
-        echo "$bin_path" >> $GITHUB_PATH
-        ./scripts/dev-setup.sh $bin_path
-        echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
-      shell: bash
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}/jolie
+#    - name: Download jolie
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
+#      uses: actions/checkout@v3
+#      with:
+#        repository: jolie/jolie
+#        ref: v${{ inputs.version }}
+#        fetch-depth: 1
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Install jolie
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
+#      run: |
+#        mvn install -Dmaven.test.skip=true
+#        bin_path="$(pwd)/bin"
+#        mkdir $bin_path
+#        echo "$bin_path" >> $GITHUB_PATH
+#        ./scripts/dev-setup.sh $bin_path
+#        echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
+#      shell: bash
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}/jolie
