@@ -15,11 +15,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
-        os: ['ubuntu-latest']
-#        version: ['1.11.0-alpha', '1.10.13']
-        version: ['1.10.13']
-        java-version: ['17']
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        version: ['1.11.0-alpha', '1.10.13']
+        java-version: ['11']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +31,5 @@ jobs:
         with:
           version: ${{ matrix.version }}
       - name: Print version
-        run: |
-          env
-          jolie --version
+        run: jolie --version
         shell: bash
