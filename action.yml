@@ -22,25 +22,33 @@ runs:
         echo "BREW_INSTALLED=$BREW_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$RUNNER_TEMP/jolie"
         echo "JOLIE_PATH=$RUNNER_TEMP/jolie" >> $GITHUB_OUTPUT
-        echo "DOWNLOAD_URL=https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar" >> $GITHUB_OUTPUT
+#        echo "DOWNLOAD_URL=https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Install jolie (Linux, macOS)
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os != 'Windows' }}
+    - name: Install jolie
       run: |
-        wget -O jolie.jar ${{ steps.info.outputs.DOWNLOAD_URL }}
-        sudo java -jar jolie.jar
-        rm -f jolie.jar
+        git clone --depth 1 --branch v${{ inputs.version }} https://github.com/jolie/jolie.git
+        cd jolie
+        mvn install
+        ls -A dist/
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
-    - name: Install jolie (Windows)
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os == 'Windows' }}
-      run: |
-        Invoke-WebRequest -URI ${{ steps.info.outputs.DOWNLOAD_URL }} -OutFile jolie.jar
-        if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-          $arguments = "& '" +$myinvocation.mycommand.definition + "'"
-          Start-Process powershell -Verb runAs -ArgumentList $arguments
-        }
-        java -jar jolie.jar
-        Remove-Item -Path jolie.jar
-      shell: pwsh
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Install jolie (Linux, macOS)
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os != 'Windows' }}
+#      run: |
+#        wget -O jolie.jar ${{ steps.info.outputs.DOWNLOAD_URL }}
+#        sudo java -jar jolie.jar
+#        rm -f jolie.jar
+#      shell: bash
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+#    - name: Install jolie (Windows)
+#      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' && runner.os == 'Windows' }}
+#      run: |
+#        Invoke-WebRequest -URI ${{ steps.info.outputs.DOWNLOAD_URL }} -OutFile jolie.jar
+#        if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+#          $arguments = "& '" +$myinvocation.mycommand.definition + "'"
+#          Start-Process powershell -Verb runAs -ArgumentList $arguments
+#        }
+#        java -jar jolie.jar
+#        Remove-Item -Path jolie.jar
+#      shell: pwsh
+#      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
