@@ -30,10 +30,10 @@ runs:
           if [[ -f "/etc/alpine-release" ]]; then
             apk add coreutils
           else
-            apt-get install realpath
+            apt-get install coreutils
           fi
         else
-          brew install realpath
+          brew install coreutils
         fi
       shell: bash
     - name: Download jolie
