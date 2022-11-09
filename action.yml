@@ -26,12 +26,9 @@ runs:
     - name: Install Jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
-        if [[ "${{ steps.info.outputs.BREW_INSTALLED }}" == "true" ]]; then
-          brew install jolie@${{ inputs.version }}
-        else
-          curl https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar --output jolie.jar
-          java -jar jolie.jar
-        fi
+        wget -O jolie.jar https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar
+        java -jar jolie.jar
         env
+        which jolie
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
