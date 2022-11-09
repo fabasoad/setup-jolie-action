@@ -33,5 +33,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
       - name: Print version
-        run: jolie --version
+        run: |
+          env
+          jolie --version
         shell: bash

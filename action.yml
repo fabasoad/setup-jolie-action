@@ -31,6 +31,7 @@ runs:
         mvn install -Dmaven.test.skip=true
         bin_path="${{ steps.info.outputs.JOLIE_PATH }}/bin"
         mkdir $bin_path
+        echo "$bin_path" >> $GITHUB_PATH
         ./scripts/dev-setup.sh $bin_path
         echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
       shell: bash
