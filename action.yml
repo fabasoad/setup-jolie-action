@@ -25,11 +25,13 @@ runs:
 #        echo "DOWNLOAD_URL=https://github.com/jolie/jolie/releases/download/v${{ inputs.version }}/jolie-${{ inputs.version }}.jar" >> $GITHUB_OUTPUT
       shell: bash
     - name: Install jolie
+      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
         git clone --depth 1 --branch v${{ inputs.version }} https://github.com/jolie/jolie.git
         cd jolie
-        mvn install
-        ls -A dist/
+        mvn install -Dmaven.test.skip=true
+        p=$(find dist/ -name "jolie*.jar")
+        echo $p
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
 #    - name: Install jolie (Linux, macOS)
