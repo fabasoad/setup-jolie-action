@@ -69,9 +69,9 @@ jobs:
           distribution: temurin
       - name: Test
         run: |
-          java --version
           echo $JAVA_HOME
           ls -A $JAVA_HOME/bin
+          java --version
         shell: bash
       - name: Setup Jolie
         uses: ./
