@@ -9,8 +9,9 @@ This action installs [Jolie](https://www.jolie-lang.org).
 ## Prerequisites
 
 The following tools have to be installed for successful work of this GitHub action:
-[wget](https://www.gnu.org/software/wget), [java](https://www.java.com) (for the
-correct version of java please follow the instructions [here](https://www.jolie-lang.org/downloads.html)).
+[bash](https://www.gnu.org/software/bash), [maven](https://maven.apache.org/)
+and [java](https://www.java.com) (for the correct version of java please follow
+the instructions [here](https://www.jolie-lang.org/downloads.html)).
 
 ## Inputs
 
