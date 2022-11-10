@@ -38,10 +38,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
       - name: Print version
-        run: |
-          ls -A $JOLIE_HOME
-          ls -A $GITHUB_WORKSPACE/jolie/bin_12345
-          jolie --version
+        run: jolie --version
         shell: bash
 #  setup-jolie-alpine:
 #    name: Setup jolie (alpine-latest)
