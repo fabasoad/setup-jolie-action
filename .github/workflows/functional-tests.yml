@@ -54,7 +54,7 @@ jobs:
             java-version: '8'
     runs-on: ubuntu-latest
     container:
-      image: alpine:latest
+      image: adoptopenjdk/openjdk${{ matrix.java-version }}:alpine-nightly-slim
     steps:
       - uses: actions/checkout@v3
       - name: Install tools
@@ -62,15 +62,9 @@ jobs:
           apk update
           apk add --update bash maven
         shell: sh
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ matrix.java-version }}
-          distribution: temurin
       - name: Test
         run: |
           echo $JAVA_HOME
-          ls -A $JAVA_HOME/bin
           java --version
         shell: bash
       - name: Setup Jolie
