@@ -47,7 +47,7 @@ runs:
     - name: Install jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
-        mvn -B -Dmaven.test.skip=true --quiet package
+        mvn install -Dmaven.test.skip=true --quiet
         bin_path="${{ steps.info.outputs.JOLIE_PATH }}/bin_$(date '+%Y%m%d%H%M%S')"
         mkdir $bin_path
         echo "$bin_path" >> $GITHUB_PATH
