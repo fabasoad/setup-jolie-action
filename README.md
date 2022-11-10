@@ -8,9 +8,10 @@ This action installs [Jolie](https://www.jolie-lang.org).
 
 ## Prerequisites
 
-**One** of the following tools have to be installed for successful work of this
-GitHub action: [brew](https://brew.sh), [java](https://www.java.com) (for the
-correct version of java please follow the instructions [here](https://www.jolie-lang.org/downloads.html)).
+The following tools have to be installed for successful work of this GitHub action:
+[bash](https://www.gnu.org/software/bash), [maven](https://maven.apache.org/)
+and [java](https://www.java.com) (for the correct version of java please follow
+the instructions [here](https://www.jolie-lang.org/downloads.html)).
 
 ## Inputs
 
@@ -29,20 +30,20 @@ on: push
 
 jobs:
   setup:
-    name: graudit
+    name: jolie
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
       - uses: fabasoad/setup-jolie-action@main
         with:
-          version: 3.4
+          version: 1.10.13
       - name: Print version
-        run: graudit -v
+        run: jolie --version
 ```
 
 ### Result
 
 ```shell
-Run graudit -v
-graudit version: 3.4
+Run jolie --version
+Jolie 1.10.13  (C) 2006-2021 the Jolie developers
 ```
