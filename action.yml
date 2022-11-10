@@ -21,7 +21,7 @@ runs:
         JOLIE_INSTALLED=$(if command -v jolie >/dev/null 2>&1; then echo true; else echo false; fi)
         echo "JOLIE_INSTALLED=$JOLIE_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$GITHUB_WORKSPACE/jolie"
-        echo "JOLIE_PATH=$GITHUB_WORKSPACE\jolie" >> $GITHUB_OUTPUT
+        echo "JOLIE_PATH=$GITHUB_WORKSPACE/jolie" >> $GITHUB_OUTPUT
       shell: bash
     - name: Install tools
       if: ${{ steps.info.outputs.REALPATH_INSTALLED == 'false' && runner.os != 'Windows' }}
@@ -48,10 +48,10 @@ runs:
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       run: |
         mvn install -Dmaven.test.skip=true --quiet
-        bin_path="${{ steps.info.outputs.JOLIE_PATH }}\bin_12345"
+        bin_path="$(pwd)/bin_$(date '+%Y%m%d%H%M%S')"
         mkdir $bin_path
         echo "$bin_path" >> $GITHUB_PATH
         ./scripts/dev-setup.sh $bin_path
-        echo "JOLIE_HOME=$bin_path\jolie-dist" >> $GITHUB_ENV
+        echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
       shell: bash
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
