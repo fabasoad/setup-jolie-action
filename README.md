@@ -23,8 +23,14 @@ the instructions [here](https://www.jolie-lang.org/downloads.html)).
 
 ### Workflow configuration
 
+Based on the [Prerequisites](#prerequisites) section we need to be sure that
+all necessary tools have been installed prior of running this action.
+
+For this we need to set up java in advance in case we use clean environment
+such as `ubuntu-latest`:
+
 ```yaml
-name: Test
+name: Run on Ubuntu
 
 on: push
 
@@ -34,6 +40,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: zulu
+      - uses: fabasoad/setup-jolie-action@main
+        with:
+          version: 1.10.13
+      - name: Print version
+        run: jolie --version
+```
+
+Or we can use ready to go container with the pre-installed java there:
+
+```yaml
+name: Run on Alpine
+
+on: push
+
+jobs:
+  setup:
+    name: jolie
+    runs-on: ubuntu-latest
+    container:
+      image: adoptopenjdk/openjdk11:alpine-nightly-slim
+    steps:
+      - uses: actions/checkout@main
+      - name: Install tools
+        run: |
+          apk update
+          apk add --update bash maven
+        shell: sh
       - uses: fabasoad/setup-jolie-action@main
         with:
           version: 1.10.13

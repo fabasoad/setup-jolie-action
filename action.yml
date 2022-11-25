@@ -22,12 +22,12 @@ runs:
         echo "JOLIE_INSTALLED=$JOLIE_INSTALLED" >> $GITHUB_OUTPUT
         mkdir -p "$GITHUB_WORKSPACE/jolie"
         echo "JOLIE_PATH=$GITHUB_WORKSPACE/jolie" >> $GITHUB_OUTPUT
-      shell: bash
+      shell: sh
     - name: Install tools
       if: ${{ steps.info.outputs.REALPATH_INSTALLED == 'false' && runner.os != 'Windows' }}
       run: |
-        if [[ "${{ runner.os }}" == "Linux" ]]; then
-          if [[ -f "/etc/alpine-release" ]]; then
+        if [ "${{ runner.os }}" = "Linux" ]; then
+          if [ -f "/etc/alpine-release" ]; then
             apk add coreutils
           else
             apt-get install coreutils
@@ -35,7 +35,7 @@ runs:
         else
           brew install coreutils
         fi
-      shell: bash
+      shell: sh
     - name: Download jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
       uses: actions/checkout@v3
@@ -53,5 +53,5 @@ runs:
         echo "$bin_path" >> $GITHUB_PATH
         ./scripts/dev-setup.sh $bin_path
         echo "JOLIE_HOME=$bin_path/jolie-dist" >> $GITHUB_ENV
-      shell: bash
+      shell: sh
       working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
