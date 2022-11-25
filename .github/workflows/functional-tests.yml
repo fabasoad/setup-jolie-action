@@ -10,7 +10,7 @@ on:
 jobs:
   setup-jolie:
     name: Setup jolie
-    timeout-minutes: 20
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -64,7 +64,7 @@ jobs:
       - name: Install tools
         run: |
           apk update
-          apk add --update maven
+          apk add --update bash maven
         shell: sh
       - name: Setup Jolie
         uses: ./
