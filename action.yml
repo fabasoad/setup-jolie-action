@@ -27,7 +27,7 @@ runs:
       if: ${{ steps.info.outputs.REALPATH_INSTALLED == 'false' && runner.os != 'Windows' }}
       run: |
         if [ "${{ runner.os }}" = "Linux" ]; then
-          if [ -f "/etc/alpine-release" ]; then
+          if [ -f /etc/alpine-release ]; then
             apk add coreutils
           else
             apt-get install coreutils
