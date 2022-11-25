@@ -9,9 +9,8 @@ This action installs [Jolie](https://www.jolie-lang.org).
 ## Prerequisites
 
 The following tools have to be installed for successful work of this GitHub action:
-[bash](https://www.gnu.org/software/bash), [maven](https://maven.apache.org/)
-and [java](https://www.java.com) (for the correct version of java please follow
-the instructions [here](https://www.jolie-lang.org/downloads.html)).
+[maven](https://maven.apache.org/) and [java](https://www.java.com) (for the
+correct version of java please follow the instructions [here](https://www.jolie-lang.org/downloads.html)).
 
 ## Inputs
 
@@ -69,7 +68,7 @@ jobs:
       - name: Install tools
         run: |
           apk update
-          apk add --update bash maven
+          apk add --update maven
         shell: sh
       - uses: fabasoad/setup-jolie-action@main
         with:
