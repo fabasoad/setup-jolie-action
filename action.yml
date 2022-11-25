@@ -32,8 +32,6 @@ runs:
           else
             apt-get install coreutils
           fi
-        else
-          brew install coreutils
         fi
       shell: bash
     - name: Download jolie
