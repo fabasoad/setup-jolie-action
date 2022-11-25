@@ -14,8 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
-        os: ['macos-latest']
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         version: ['1.11.0-alpha', '1.10.13', '1.10.0']
         include:
           - version: '1.11.0-alpha'
@@ -24,11 +23,11 @@ jobs:
             java-version: '11'
           - version: '1.10.0'
             java-version: '8'
-#        exclude:
-#          - os: 'windows-latest'
-#            version: '1.10.13'
-#          - os: 'windows-latest'
-#            version: '1.10.0'
+        exclude:
+          - os: 'windows-latest'
+            version: '1.10.13'
+          - os: 'windows-latest'
+            version: '1.10.0'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -44,33 +43,33 @@ jobs:
       - name: Print version
         run: jolie --version
         shell: sh
-#  setup-jolie-alpine:
-#    name: Setup jolie (alpine-latest)
-#    timeout-minutes: 15
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        include:
-#          - version: '1.11.0-alpha'
-#            java-version: '11'
-#          - version: '1.10.13'
-#            java-version: '11'
-#          - version: '1.10.0'
-#            java-version: '8'
-#    runs-on: ubuntu-latest
-#    container:
-#      image: adoptopenjdk/openjdk${{ matrix.java-version }}:alpine-nightly-slim
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Install tools
-#        run: |
-#          apk update
-#          apk add --update bash maven
-#        shell: sh
-#      - name: Setup Jolie
-#        uses: ./
-#        with:
-#          version: ${{ matrix.version }}
-#      - name: Print version
-#        run: jolie --version
-#        shell: sh
+  setup-jolie-alpine:
+    name: Setup jolie (alpine-latest)
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: '1.11.0-alpha'
+            java-version: '11'
+          - version: '1.10.13'
+            java-version: '11'
+          - version: '1.10.0'
+            java-version: '8'
+    runs-on: ubuntu-latest
+    container:
+      image: adoptopenjdk/openjdk${{ matrix.java-version }}:alpine-nightly-slim
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install tools
+        run: |
+          apk update
+          apk add --update bash maven
+        shell: sh
+      - name: Setup Jolie
+        uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Print version
+        run: jolie --version
+        shell: sh
