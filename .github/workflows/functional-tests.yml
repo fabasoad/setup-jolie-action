@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        os: ['ubuntu', 'windows', 'macos']
         version: ['1.11.0-alpha', '1.10.13', '1.10.0']
         include:
           - version: '1.11.0-alpha'
@@ -24,11 +24,11 @@ jobs:
           - version: '1.10.0'
             java-version: '8'
         exclude:
-          - os: 'windows-latest'
+          - os: 'windows'
             version: '1.10.13'
-          - os: 'windows-latest'
+          - os: 'windows'
             version: '1.10.0'
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup Java
@@ -44,21 +44,24 @@ jobs:
         run: jolie --version
         shell: sh
   setup-jolie-alpine:
-    name: Setup jolie (alpine-latest)
+    name: Setup jolie
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         include:
-          - version: '1.11.0-alpha'
+          - image: 'alpine'
+            version: '1.11.0-alpha'
             java-version: '11'
-          - version: '1.10.13'
+          - image: 'alpine'
+            version: '1.10.13'
             java-version: '11'
-          - version: '1.10.0'
+          - image: 'alpine'
+            version: '1.10.0'
             java-version: '8'
     runs-on: ubuntu-latest
     container:
-      image: adoptopenjdk/openjdk${{ matrix.java-version }}:alpine-nightly-slim
+      image: adoptopenjdk/openjdk${{ matrix.java-version }}:${{ matrix.image }}-nightly-slim
     steps:
       - uses: actions/checkout@v3
       - name: Install tools
