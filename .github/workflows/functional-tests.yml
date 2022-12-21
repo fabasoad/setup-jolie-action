@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu', 'windows', 'macos']
-        version: ['1.11.0-alpha', '1.10.13', '1.10.0']
+        version: ['1.11.0-beta', '1.10.13', '1.10.0']
         include:
-          - version: '1.11.0-alpha'
+          - version: '1.11.0-beta'
             java-version: '11'
           - version: '1.10.13'
             java-version: '11'
@@ -51,7 +51,7 @@ jobs:
       matrix:
         include:
           - image: 'alpine'
-            version: '1.11.0-alpha'
+            version: '1.11.0-beta'
             java-version: '11'
           - image: 'alpine'
             version: '1.10.13'
