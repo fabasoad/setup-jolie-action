@@ -10,7 +10,7 @@ on:
 jobs:
   setup-jolie:
     name: Setup jolie
-    timeout-minutes: 120
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -28,6 +28,8 @@ jobs:
             version: '1.10.13'
           - os: 'windows'
             version: '1.10.0'
+          - os: 'macos'
+            version: '1.11.0-beta'
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
