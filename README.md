@@ -1,5 +1,6 @@
 # Setup Jolie action
 
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 ![Release](https://img.shields.io/github/v/release/fabasoad/setup-jolie-action?include_prereleases)
 ![Functional Tests](https://github.com/fabasoad/setup-jolie-action/workflows/Functional%20Tests/badge.svg)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/fabasoad/setup-jolie-action/main.svg)](https://results.pre-commit.ci/latest/github/fabasoad/setup-jolie-action/main)
