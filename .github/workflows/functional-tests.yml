@@ -14,7 +14,7 @@ defaults:
 jobs:
   setup-jolie:
     name: Setup jolie
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
