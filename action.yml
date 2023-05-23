@@ -1,17 +1,17 @@
 ---
-name: 'Setup Jolie'
+name: "Setup Jolie"
 author: Yevhen Fabizhevskyi
-description: 'Set up a specific version of Jolie.'
+description: "Set up a specific version of Jolie."
 branding:
   icon: terminal
   color: gray-dark
 inputs:
   version:
-    description: 'Jolie version.'
+    description: "Jolie version."
     required: false
-    default: '1.10.13'
+    default: "1.10.13"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Collect info
       id: info
