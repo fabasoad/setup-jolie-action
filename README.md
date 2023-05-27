@@ -2,7 +2,7 @@
 
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 ![Release](https://img.shields.io/github/v/release/fabasoad/setup-jolie-action?include_prereleases)
-![Functional Tests](https://github.com/fabasoad/setup-jolie-action/workflows/Functional%20Tests/badge.svg)
+![functional-tests](https://github.com/fabasoad/setup-jolie-action/actions/workflows/functional-tests.yml/badge.svg)
 ![pre-commit](https://github.com/fabasoad/setup-jolie-action/actions/workflows/pre-commit.yml/badge.svg)
 
 This action installs [Jolie](https://www.jolie-lang.org).
@@ -17,9 +17,9 @@ the instructions [here](https://www.jolie-lang.org/downloads.html)).
 ## Inputs
 
 <!-- prettier-ignore-start -->
-| Name    | Required | Description                                                                          | Default   | Possible values |
-|---------|----------|--------------------------------------------------------------------------------------|-----------|-----------------|
-| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.10.13` | &lt;String&gt;  |
+| Name    | Required | Description                                                                          | Default  | Possible values |
+|---------|----------|--------------------------------------------------------------------------------------|----------|-----------------|
+| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.11.0` | &lt;String&gt;  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
@@ -70,10 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: Install tools
-        run: |
-          apk update
-          apk add --update maven
-        shell: sh
+        run: apk add --update maven
       - uses: fabasoad/setup-jolie-action@main
         with:
           version: 1.10.13
