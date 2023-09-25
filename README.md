@@ -19,7 +19,7 @@ the instructions [here](https://www.jolie-lang.org/downloads.html)).
 <!-- prettier-ignore-start -->
 | Name    | Required | Description                                                                          | Default  | Possible values |
 |---------|----------|--------------------------------------------------------------------------------------|----------|-----------------|
-| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.11.0` | &lt;String&gt;  |
+| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.11.1` | &lt;String&gt;  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
