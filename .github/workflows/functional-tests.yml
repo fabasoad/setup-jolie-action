@@ -40,7 +40,7 @@ jobs:
             version: "1.11.1"
     runs-on: ${{ matrix.os }}-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -75,7 +75,7 @@ jobs:
     container:
       image: adoptopenjdk/openjdk${{ matrix.java-version }}:${{ matrix.image }}-nightly-slim
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install tools
         run: |
           apk update

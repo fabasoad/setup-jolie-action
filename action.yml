@@ -38,7 +38,7 @@ runs:
       shell: bash
     - name: Download jolie
       if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: jolie/jolie
         ref: v${{ inputs.version }}
