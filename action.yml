@@ -9,7 +9,7 @@ inputs:
   version:
     description: "Jolie version."
     required: false
-    default: "1.11.1"
+    default: "1.11.2"
 runs:
   using: "composite"
   steps:

@@ -13,31 +13,13 @@ defaults:
 
 jobs:
   setup-jolie:
-    name: Setup jolie
+    name: Setup jolie (${{ matrix.os }})
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu", "windows", "macos"]
-        version: ["1.11.1", "1.11.0", "1.10.13", "1.10.0"]
-        include:
-          - version: "1.11.1"
-            java-version: "11"
-          - version: "1.11.0"
-            java-version: "11"
-          - version: "1.10.13"
-            java-version: "11"
-          - version: "1.10.0"
-            java-version: "8"
-        exclude:
-          - os: "windows"
-            version: "1.10.13"
-          - os: "windows"
-            version: "1.10.0"
-          - os: "macos"
-            version: "1.11.0"
-          - os: "macos"
-            version: "1.11.1"
+        os: ["ubuntu", "windows"]
+        version: ["1.11.2", "1.11.1", "1.11.0"]
     runs-on: ${{ matrix.os }}-latest
     steps:
       - name: Checkout ${{ github.repository }}
@@ -45,7 +27,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }}
+          java-version: 11
           distribution: zulu
       - name: Setup Jolie
         uses: ./
@@ -54,27 +36,15 @@ jobs:
       - name: Print version
         run: jolie --version
   setup-jolie-alpine:
-    name: Setup jolie
+    name: Setup jolie (alpine)
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - image: "alpine"
-            version: "1.11.1"
-            java-version: "11"
-          - image: "alpine"
-            version: "1.11.0"
-            java-version: "11"
-          - image: "alpine"
-            version: "1.10.13"
-            java-version: "11"
-          - image: "alpine"
-            version: "1.10.0"
-            java-version: "8"
+        version: ["1.11.2", "1.11.1", "1.11.0"]
     runs-on: ubuntu-latest
     container:
-      image: adoptopenjdk/openjdk${{ matrix.java-version }}:${{ matrix.image }}-nightly-slim
+      image: adoptopenjdk/openjdk11:alpine-nightly-slim
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
