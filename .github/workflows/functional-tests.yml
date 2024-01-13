@@ -13,7 +13,7 @@ defaults:
 
 jobs:
   setup-jolie:
-    name: Setup jolie (${{ matrix.os }})
+    name: Setup jolie
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -36,15 +36,16 @@ jobs:
       - name: Print version
         run: jolie --version
   setup-jolie-alpine:
-    name: Setup jolie (alpine)
+    name: Setup jolie
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
+        image: ["alpine"]
         version: ["1.11.2", "1.11.1", "1.11.0"]
     runs-on: ubuntu-latest
     container:
-      image: adoptopenjdk/openjdk11:alpine-nightly-slim
+      image: adoptopenjdk/openjdk11:${{ matrix.image }}-nightly-slim
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
