@@ -50,7 +50,7 @@ jobs:
           distribution: zulu
       - uses: fabasoad/setup-jolie-action@v0
         with:
-          version: 1.10.13
+          version: "1.12.0"
       - name: Print version
         run: jolie --version
 ```
@@ -74,7 +74,7 @@ jobs:
         run: apk add --update maven
       - uses: fabasoad/setup-jolie-action@v0
         with:
-          version: 1.10.13
+          version: "1.12.0"
       - name: Print version
         run: jolie --version
 ```
@@ -83,5 +83,5 @@ jobs:
 
 ```shell
 Run jolie --version
-Jolie 1.10.13  (C) 2006-2021 the Jolie developers
+Jolie 1.12.0  (C) 2006-2022 the Jolie developers
 ```
