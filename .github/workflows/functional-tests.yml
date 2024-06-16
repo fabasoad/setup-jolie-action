@@ -33,8 +33,15 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Print version
-        run: jolie --version
+      - name: Verify installed version
+        run: |
+          actual_version=$(jolie --version | cut -d ' ' -f 2)
+          expected_version="${{ matrix.version }}"
+          if [ "${expected_version}" != "${actual_version}" ]; then
+            msg="Expected - ${expected_version}. Received - ${actual_version}."
+            echo "::error title=Unexpected jolie version::${msg}"
+            exit 1
+          fi
   setup-jolie-alpine:
     name: Setup jolie
     timeout-minutes: 15
@@ -57,5 +64,12 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Print version
-        run: jolie --version
+      - name: Verify installed version
+        run: |
+          actual_version=$(jolie --version | cut -d ' ' -f 2)
+          expected_version="${{ matrix.version }}"
+          if [ "${expected_version}" != "${actual_version}" ]; then
+            msg="Expected - ${expected_version}. Received - ${actual_version}."
+            echo "::error title=Unexpected jolie version::${msg}"
+            exit 1
+          fi
