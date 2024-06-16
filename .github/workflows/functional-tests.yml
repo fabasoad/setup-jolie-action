@@ -35,7 +35,8 @@ jobs:
           version: ${{ matrix.version }}
       - name: Verify installed version
         run: |
-          actual_version=$(jolie --version | cut -d ' ' -f 2)
+          output="$(jolie --version)"
+          actual_version=$(echo "$output" | cut -d ' ' -f 2)
           expected_version="${{ matrix.version }}"
           if [ "${expected_version}" != "${actual_version}" ]; then
             msg="Expected - ${expected_version}. Received - ${actual_version}."
@@ -66,7 +67,8 @@ jobs:
           version: ${{ matrix.version }}
       - name: Verify installed version
         run: |
-          actual_version=$(jolie --version | cut -d ' ' -f 2)
+          output="$(jolie --version)"
+          actual_version=$(echo "$output" | cut -d ' ' -f 2)
           expected_version="${{ matrix.version }}"
           if [ "${expected_version}" != "${actual_version}" ]; then
             msg="Expected - ${expected_version}. Received - ${actual_version}."
