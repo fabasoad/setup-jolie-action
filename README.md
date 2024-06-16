@@ -20,7 +20,7 @@ the instructions [here](https://www.jolie-lang.org/downloads.html)).
 <!-- prettier-ignore-start -->
 | Name    | Required | Description                                                                          | Default  | Possible values |
 |---------|----------|--------------------------------------------------------------------------------------|----------|-----------------|
-| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.11.2` | &lt;String&gt;  |
+| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.12.0` | &lt;String&gt;  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
@@ -43,12 +43,12 @@ jobs:
     name: jolie
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: 11
           distribution: zulu
-      - uses: fabasoad/setup-jolie-action@main
+      - uses: fabasoad/setup-jolie-action@v0
         with:
           version: 1.10.13
       - name: Print version
@@ -69,10 +69,10 @@ jobs:
     container:
       image: adoptopenjdk/openjdk11:alpine-nightly-slim
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v4
       - name: Install tools
         run: apk add --update maven
-      - uses: fabasoad/setup-jolie-action@main
+      - uses: fabasoad/setup-jolie-action@v0
         with:
           version: 1.10.13
       - name: Print version
