@@ -20,7 +20,7 @@ the instructions [here](https://www.jolie-lang.org/downloads.html)).
 <!-- prettier-ignore-start -->
 | Name    | Required | Description                                                                          | Default  | Possible values |
 |---------|----------|--------------------------------------------------------------------------------------|----------|-----------------|
-| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.12.0` | &lt;String&gt;  |
+| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.12.1` | &lt;String&gt;  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
@@ -50,7 +50,7 @@ jobs:
           distribution: zulu
       - uses: fabasoad/setup-jolie-action@v0
         with:
-          version: "1.12.0"
+          version: "1.12.1"
       - name: Print version
         run: jolie --version
 ```
@@ -74,7 +74,7 @@ jobs:
         run: apk add --update maven
       - uses: fabasoad/setup-jolie-action@v0
         with:
-          version: "1.12.0"
+          version: "1.12.1"
       - name: Print version
         run: jolie --version
 ```
@@ -83,5 +83,5 @@ jobs:
 
 ```shell
 Run jolie --version
-Jolie 1.12.0  (C) 2006-2022 the Jolie developers
+Jolie 1.12.1  (C) 2006-2022 the Jolie developers
 ```
