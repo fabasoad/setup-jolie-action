@@ -9,10 +9,18 @@ inputs:
   version:
     description: "Jolie version."
     required: false
-    default: "1.12.1"
+    default: "1.12.2"
 runs:
   using: "composite"
   steps:
+    - name: Test env var
+      env:
+        TEST_ENV_VAR: "Hello"
+      shell: sh
+      run: echo "${TEST_ENV_VAR}"
+    - name: Test env var 2
+      shell: sh
+      run: echo "${TEST_ENV_VAR}"
     - name: Collect info
       id: info
       run: |
