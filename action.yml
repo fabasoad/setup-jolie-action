@@ -9,22 +9,22 @@ inputs:
   version:
     description: "Jolie version."
     required: false
-    default: "1.12.1"
+    default: "1.12.2"
 runs:
   using: "composite"
   steps:
     - name: Collect info
       id: info
       run: |
-        REALPATH_INSTALLED=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
-        echo "REALPATH_INSTALLED=${REALPATH_INSTALLED}" >> $GITHUB_OUTPUT
-        JOLIE_INSTALLED=$(if command -v jolie >/dev/null 2>&1; then echo true; else echo false; fi)
-        echo "JOLIE_INSTALLED=${JOLIE_INSTALLED}" >> $GITHUB_OUTPUT
+        realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
+        echo "realpath-installed=${realpath_installed}" >> $GITHUB_OUTPUT
+        jolie_installed=$(if command -v jolie >/dev/null 2>&1; then echo true; else echo false; fi)
+        echo "jolie-installed=${jolie_installed}" >> $GITHUB_OUTPUT
         mkdir -p "${GITHUB_WORKSPACE}/jolie"
-        echo "JOLIE_PATH=${GITHUB_WORKSPACE}/jolie" >> $GITHUB_OUTPUT
+        echo "jolie-path=${GITHUB_WORKSPACE}/jolie" >> $GITHUB_OUTPUT
       shell: sh
     - name: Install tools
-      if: ${{ steps.info.outputs.REALPATH_INSTALLED == 'false' && runner.os != 'Windows' }}
+      if: ${{ steps.info.outputs.realpath-installed == 'false' && runner.os != 'Windows' }}
       run: |
         if [ "${RUNNER_OS}" = "Linux" ]; then
           if [ -f "/etc/alpine-release" ]; then
@@ -37,7 +37,7 @@ runs:
         fi
       shell: sh
     - name: Download jolie
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
+      if: ${{ steps.info.outputs.jolie-installed == 'false' }}
       uses: actions/checkout@v4
       with:
         repository: jolie/jolie
@@ -45,7 +45,7 @@ runs:
         fetch-depth: 1
         path: jolie
     - name: Install jolie
-      if: ${{ steps.info.outputs.JOLIE_INSTALLED == 'false' }}
+      if: ${{ steps.info.outputs.jolie-installed == 'false' }}
       run: |
         mvn install -Dmaven.test.skip=true --quiet
         bin_path="$(pwd)/bin_$(date '+%Y%m%d%H%M%S')"
@@ -54,4 +54,4 @@ runs:
         ./scripts/dev-setup.sh "${bin_path}"
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
       shell: bash
-      working-directory: ${{ steps.info.outputs.JOLIE_PATH }}
+      working-directory: ${{ steps.info.outputs.jolie-path }}
