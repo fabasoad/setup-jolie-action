@@ -7,45 +7,66 @@ branding:
   color: gray-dark
 inputs:
   version:
-    description: "Jolie version."
+    description: Jolie version. Defaults to the latest version.
     required: false
-    default: "1.12.2"
+    default: "latest"
+  force:
+    description: |
+      If "false" skips installation if jolie is already installed. If "true"
+      installs jolie in any case. Defaults to "false".
+    required: false
+    default: "false"
+outputs:
+  installed:
+    description: Whether jolie was installed or not.
+    value: "${{ steps.install-jolie.outcome == 'success' }}"
 runs:
   using: "composite"
   steps:
     - name: Collect info
       id: info
-      run: |
-        realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
-        echo "realpath-installed=${realpath_installed}" >> $GITHUB_OUTPUT
-        jolie_installed=$(if command -v jolie >/dev/null 2>&1; then echo true; else echo false; fi)
-        echo "jolie-installed=${jolie_installed}" >> $GITHUB_OUTPUT
-        mkdir -p "${GITHUB_WORKSPACE}/jolie"
-        echo "jolie-path=${GITHUB_WORKSPACE}/jolie" >> $GITHUB_OUTPUT
+      env:
+        INPUT_FORCE: "${{ inputs.force }}"
+      run: ./collect-info.sh "${INPUT_FORCE}"
       shell: sh
-    - name: Install tools
-      if: ${{ steps.info.outputs.realpath-installed == 'false' && runner.os != 'Windows' }}
+      working-directory: "${{ github.action_path }}/src"
+    - name: Setup dependencies
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
       run: |
-        if [ "${RUNNER_OS}" = "Linux" ]; then
-          if [ -f "/etc/alpine-release" ]; then
-            apk add coreutils
-          else
-            apt-get install coreutils
-          fi
-        else
-          brew install coreutils
-        fi
+        ./setup-dependencies.sh \
+          "${{ steps.info.outputs.realpath-installed }}" \
+          "${{ steps.info.outputs.bash-installed }}" \
+          "${{ steps.info.outputs.maven-installed }}" \
+          "${{ steps.info.outputs.curl-installed }}" \
+          "${{ steps.info.outputs.tar-installed }}"
       shell: sh
+      working-directory: "${{ github.action_path }}/src"
+    - name: Setup Java
+      if: (steps.info.outputs.bin-installed == 'false'
+        && steps.info.outputs.java-installed == 'false')
+      uses: actions/setup-java@v4
+      with:
+        distribution: "temurin"
+        java-version: "23"
+    - name: Setup maven
+      if: (steps.info.outputs.bin-installed == 'false'
+        && steps.info.outputs.maven-installed == 'false')
+      env:
+        MAVEN_VERSION: "3.9.9"
+      run: ./setup-maven.sh
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
     - name: Download jolie
-      if: ${{ steps.info.outputs.jolie-installed == 'false' }}
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
       uses: actions/checkout@v4
       with:
-        repository: jolie/jolie
-        ref: v${{ inputs.version }}
+        repository: "jolie/jolie"
+        ref: ${{ inputs.version == 'latest' && 'master' || format('v{0}', inputs.version) }}
         fetch-depth: 1
-        path: jolie
+        path: ${{ steps.info.outputs.bin-dir }}
     - name: Install jolie
-      if: ${{ steps.info.outputs.jolie-installed == 'false' }}
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: install-jolie
       run: |
         mvn install -Dmaven.test.skip=true --quiet
         bin_path="$(pwd)/bin_$(date '+%Y%m%d%H%M%S')"
@@ -54,4 +75,4 @@ runs:
         ./scripts/dev-setup.sh "${bin_path}"
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
       shell: bash
-      working-directory: ${{ steps.info.outputs.jolie-path }}
+      working-directory: "${{ steps.info.outputs.bin-path }}"
