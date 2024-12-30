@@ -17,6 +17,8 @@ main() {
   curl --version
   log_info "tar version:"
   tar --version
+  log_info "jq version:"
+  jq --version
 }
 
 main "$@"
