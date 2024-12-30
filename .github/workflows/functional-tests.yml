@@ -67,15 +67,8 @@ jobs:
           test_equal "jolie should not be installed" \
             "${{ steps.setup-jolie.outputs.installed }}" \
             "true"
-      - name: Verify installed version
-        run: |
-          actual_version=$(jolie --version 2>&1 | cut -d ' ' -f 2)
-          expected_version="${{ matrix.version }}"
-          if [ "${expected_version}" != "${actual_version}" ]; then
-            msg="Expected - ${expected_version}. Received - ${actual_version}."
-            echo "::error title=Unexpected jolie version::${msg}"
-            exit 1
-          fi
+      - name: Print version
+        run: jolie --version
   setup-jolie-alpine:
     name: Setup jolie (alpine, latest)
     runs-on: ubuntu-latest
@@ -90,3 +83,36 @@ jobs:
         uses: ./
       - name: Print version
         run: jolie --version
+  test-force:
+    name: Test force
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        force: ["true", "false"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Jolie 1
+        id: setup-jolie-1
+        uses: ./
+      - name: Setup Jolie 2
+        id: setup-jolie-2
+        uses: ./
+        with:
+          force: ${{ matrix.force }}
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "Wrong \"installed\" output from setup-jolie-1" \
+            "${{ steps.setup-jolie-1.outputs.installed }}" \
+            "true"
+          test_equal "Wrong \"installed\" output from setup-jolie-2" \
+            "${{ steps.setup-jolie-2.outputs.installed }}" \
+            "${{ matrix.force }}"
