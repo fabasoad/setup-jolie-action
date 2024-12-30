@@ -56,6 +56,11 @@ runs:
       run: ./setup-maven.sh "${MAVEN_VERSION}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
+    - name: Print versions
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      run: ./print-versions.sh
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
     - name: Download jolie
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       uses: actions/checkout@v4
