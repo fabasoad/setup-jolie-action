@@ -8,7 +8,7 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 
 main() {
   log_info "Java version:"
-  java --version
+  java -version
   log_info "Maven version:"
   mvn --version
   log_info "bash version:"

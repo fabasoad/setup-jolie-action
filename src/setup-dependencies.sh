@@ -49,12 +49,7 @@ _setup_tar() {
 }
 
 _setup_dependencies_for_maven() {
-  curl_installed="${1}"
-  tar_installed="${2}"
-
-  if [ "${curl_installed}" = "false" ]; then
-    _setup_curl
-  fi
+  tar_installed="${1}"
 
   if [ "${tar_installed}" = "false" ]; then
     _setup_tar
@@ -76,8 +71,12 @@ main() {
     _setup_bash
   fi
 
+  if [ "${curl_installed}" = "false" ]; then
+    _setup_curl
+  fi
+
   if [ "${maven_installed}" = "false" ]; then
-    _setup_dependencies_for_maven "${curl_installed}" "${tar_installed}"
+    _setup_dependencies_for_maven "${tar_installed}"
   fi
 }
 
