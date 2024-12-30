@@ -48,7 +48,7 @@ runs:
         && (steps.info.outputs.java-installed == 'false' || runner.os == 'Windows'))
       uses: actions/setup-java@v4
       with:
-        distribution: "temurin"
+        distribution: "zulu"
         java-version: "21"
     - name: Setup maven
       if: (steps.info.outputs.bin-installed == 'false'
