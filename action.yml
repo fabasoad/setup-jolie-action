@@ -42,8 +42,10 @@ runs:
       shell: sh
       working-directory: "${{ github.action_path }}/src"
     - name: Setup Java
+      # windows-latest has java 8 by default which is incompatible with the latest
+      # jolie. So, we need to install java anyway.
       if: (steps.info.outputs.bin-installed == 'false'
-        && steps.info.outputs.java-installed == 'false')
+        && (steps.info.outputs.java-installed == 'false' || runner.os == 'Windows'))
       uses: actions/setup-java@v4
       with:
         distribution: "temurin"
@@ -67,7 +69,7 @@ runs:
     - name: Get latest release
       if: ${{ steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' }}
       id: latest-release
-      run: ./get-latest-release.sh
+      run: ./get-latest-release.sh "jolie/jolie"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
     - name: Download jolie
