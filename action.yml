@@ -41,16 +41,20 @@ runs:
           "${{ steps.info.outputs.tar-installed }}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
-    - name: Setup Java (Alpine)
-      if: (steps.info.outputs.bin-installed == 'false' && runner.os == 'Linux')
-      run: ./setup-java-alpine.sh
+    - name: Setup Java (Unix)
+      if: (steps.info.outputs.bin-installed == 'false'
+        && steps.info.outputs.java-installed == 'false'
+        && runner.os != 'Windows')
+      env:
+        JAVA_VERSION: "21"
+      run: ./setup-java-unix.sh "${JAVA_VERSION}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
-    - name: Setup Java
+    - name: Setup Java (Windows)
       # windows-latest has java 8 by default which is incompatible with the latest
       # jolie. So, we need to install java anyway.
       if: (steps.info.outputs.bin-installed == 'false'
-        && (env.JAVA_HOME == '' || runner.os == 'Windows'))
+        && runner.os == 'Windows')
       uses: actions/setup-java@v4
       with:
         distribution: "zulu"
