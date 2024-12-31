@@ -9,6 +9,9 @@ main() {
   bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "bash-installed=${bash_installed}" >> $GITHUB_OUTPUT
 
+  java_installed=$(if command -v java >/dev/null 2>&1; then echo true; else echo false; fi)
+  echo "java-installed=${java_installed}" >> $GITHUB_OUTPUT
+
   maven_installed=$(if command -v mvn >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "maven-installed=${maven_installed}" >> $GITHUB_OUTPUT
 
