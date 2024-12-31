@@ -119,3 +119,13 @@ runs:
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
       shell: bash
       working-directory: "${{ steps.info.outputs.bin-path }}"
+
+    - name: Print version
+      run: |
+        if [ "${{ steps.info.outputs.bin-installed }}" = "true ]; then
+          . ./lib/logging.sh
+          log_info "Jolie is found at $(which jolie). Installation skipped."
+        fi
+        jolie --version
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
