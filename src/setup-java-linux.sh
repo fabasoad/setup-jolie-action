@@ -18,8 +18,6 @@ main() {
     else
       apt install openjdk-${java_version}-jdk -y
       java_home="/usr/lib/jvm/java-${java_version}-openjdk-amd64"
-      ls -la /usr/lib/jvm
-      ls -la "${java_home}"
     fi
   fi
 
