@@ -50,11 +50,13 @@ runs:
       run: ./setup-java-unix.sh "${JAVA_VERSION}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
-    - name: Setup Java (Windows)
+    - name: Setup Java (Windows, macOS)
       # windows-latest has java 8 by default which is incompatible with the latest
       # jolie. So, we need to install java anyway.
       if: (steps.info.outputs.bin-installed == 'false'
-        && runner.os == 'Windows')
+        && (runner.os == 'Windows'
+        || (steps.info.outputs.java-installed == 'false'
+        && runner.os == 'macOS')))
       uses: actions/setup-java@v4
       with:
         distribution: "zulu"
