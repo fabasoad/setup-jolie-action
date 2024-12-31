@@ -70,11 +70,15 @@ jobs:
   #      - name: Print version
   #        run: jolie --version
   setup-jolie-alpine:
-    name: Setup jolie (alpine, latest)
+    name: Setup jolie (${{ matrix.image }}, latest)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:
-      image: alpine:3.21
+      image: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["alpine:3.21", "ubuntu:25.04"]
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
