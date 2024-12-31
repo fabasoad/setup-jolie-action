@@ -4,72 +4,120 @@ name: Functional Tests
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - "main"
+      - main
   pull_request:
+    paths:
+      - .github/workflows/functional-tests.yml
+      - src/**
+      - action.yml
+  schedule:
+    # Every Friday at 09:00 JST
+    - cron: "0 0 * * 5"
+  workflow_dispatch: {}
 
 defaults:
   run:
     shell: sh
 
 jobs:
+  get-versions:
+    name: Get 3 latest versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      versions: ${{ steps.prepare-list.outputs.versions }}
+    steps:
+      - name: Prepare list
+        id: prepare-list
+        env:
+          RELEASES_AMOUNT: "3"
+          TARGET_REPO: "jolie/jolie"
+        run: |
+          versions=$(curl -sL \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${TARGET_REPO}/releases" \
+            | jq -c -r --arg n "${RELEASES_AMOUNT}" '[.[0:($n | tonumber)][].tag_name] | map(sub("^v"; "")) | . += ["latest"]')
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   setup-jolie:
     name: Setup jolie
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["ubuntu", "windows"]
-        version: ["1.12.2", "1.12.1", "1.12.0"]
+    needs: [get-versions]
     runs-on: ${{ matrix.os }}-latest
-    steps:
-      - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v4
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: zulu
-      - name: Setup Jolie
-        uses: ./
-        with:
-          version: ${{ matrix.version }}
-      - name: Verify installed version
-        run: |
-          actual_version=$(jolie --version 2>&1 | cut -d ' ' -f 2)
-          expected_version="${{ matrix.version }}"
-          if [ "${expected_version}" != "${actual_version}" ]; then
-            msg="Expected - ${expected_version}. Received - ${actual_version}."
-            echo "::error title=Unexpected jolie version::${msg}"
-            exit 1
-          fi
-  setup-jolie-alpine:
-    name: Setup jolie
-    timeout-minutes: 15
+    timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
-        image: ["alpine"]
-        version: ["1.12.2", "1.12.1", "1.12.0"]
-    runs-on: ubuntu-latest
-    container:
-      image: adoptopenjdk/openjdk11:${{ matrix.image }}-nightly-slim
+        os: ["ubuntu", "windows", "macos"]
+        version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
-      - name: Install tools
-        run: |
-          apk update
-          apk add --update bash maven
       - name: Setup Jolie
+        id: setup-jolie
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Verify installed version
+      - name: Test action completion
         run: |
-          actual_version=$(jolie --version 2>&1 | cut -d ' ' -f 2)
-          expected_version="${{ matrix.version }}"
-          if [ "${expected_version}" != "${actual_version}" ]; then
-            msg="Expected - ${expected_version}. Received - ${actual_version}."
-            echo "::error title=Unexpected jolie version::${msg}"
-            exit 1
-          fi
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "jolie should not be installed" \
+            "${{ steps.setup-jolie.outputs.installed }}" \
+            "true"
+      - name: Print version
+        run: jolie --version
+  setup-jolie-in-container:
+    name: Setup jolie in container (${{ matrix.image }}, latest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: ${{ matrix.image }}:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["alpine", "ubuntu"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Jolie
+        id: setup-jolie
+        uses: ./
+      - name: Print version
+        run: jolie --version
+  test-force:
+    name: Test force
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        force: ["true", "false"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Jolie 1
+        id: setup-jolie-1
+        uses: ./
+      - name: Setup Jolie 2
+        id: setup-jolie-2
+        uses: ./
+        with:
+          force: ${{ matrix.force }}
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "Wrong \"installed\" output from setup-jolie-1" \
+            "${{ steps.setup-jolie-1.outputs.installed }}" \
+            "true"
+          test_equal "Wrong \"installed\" output from setup-jolie-2" \
+            "${{ steps.setup-jolie-2.outputs.installed }}" \
+            "${{ matrix.force }}"

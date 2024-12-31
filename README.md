@@ -8,30 +8,47 @@
 
 This action installs [Jolie](https://www.jolie-lang.org).
 
+## Supported OS
+
+<!-- prettier-ignore-start -->
+| OS      |                    |
+|---------|--------------------|
+| Windows | :white_check_mark: |
+| Linux   | :white_check_mark: |
+| macOS   | :white_check_mark: |
+<!-- prettier-ignore-end -->
+
 ## Prerequisites
 
-The following tools have to be installed for successful work of this GitHub action:
-[bash](https://www.gnu.org/software/bash), [maven](https://maven.apache.org/)
-and [java](https://www.java.com) (for the correct version of java please follow
-the instructions [here](https://www.jolie-lang.org/downloads.html)).
+None.
 
 ## Inputs
 
+```yaml
+- uses: fabasoad/setup-jolie-action@v0
+  with:
+    # (Optional) Jolie version. Defaults to the latest version.
+    version: "1.12.2"
+    # (Optional) If "false" skips installation if jolie is already installed. If
+    # "true" installs jolie in any case. Defaults to "false".
+    force: "false"
+    # (Optional) GitHub token that is used to send requests to GitHub API such
+    # as getting latest release. Defaults to the token provided by GitHub Actions
+    # environment.
+    github-token: "${{ github.token }}"
+```
+
+## Outputs
+
 <!-- prettier-ignore-start -->
-| Name    | Required | Description                                                                          | Default  | Possible values |
-|---------|----------|--------------------------------------------------------------------------------------|----------|-----------------|
-| version | No       | Version of `Jolie` that can be found [here](https://github.com/jolie/jolie/releases) | `1.12.2` | &lt;String&gt;  |
+| Name      | Description                        | Example |
+|-----------|------------------------------------|---------|
+| installed | Whether jolie was installed or not | `true`  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
 
 ### Workflow configuration
-
-Based on the [Prerequisites](#prerequisites) section we need to be sure that
-all necessary tools have been installed prior of running this action.
-
-For this we need to set up java in advance in case we use clean environment
-such as `ubuntu-latest`:
 
 ```yaml
 name: Run on Ubuntu
@@ -43,35 +60,6 @@ jobs:
     name: jolie
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: zulu
-      - uses: fabasoad/setup-jolie-action@v0
-        with:
-          version: "1.12.1"
-      - name: Print version
-        run: jolie --version
-```
-
-Or we can use ready to go container with the pre-installed java there:
-
-```yaml
-name: Run on Alpine
-
-on: push
-
-jobs:
-  setup:
-    name: jolie
-    runs-on: ubuntu-latest
-    container:
-      image: adoptopenjdk/openjdk11:alpine-nightly-slim
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install tools
-        run: apk add --update maven
       - uses: fabasoad/setup-jolie-action@v0
         with:
           version: "1.12.1"
