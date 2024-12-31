@@ -10,7 +10,7 @@ _update() {
           apt-get update
         fi
       fi
-      exit 0
+      break
     fi
   done
 }
