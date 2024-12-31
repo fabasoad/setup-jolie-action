@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 
+SCRIPT_PATH=$(realpath "$0")
+SRC_DIR_PATH=$(dirname "$SCRIPT_PATH")
+LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
+
+. "${LIB_DIR_PATH}/logging.sh"
+
 main() {
   input_force="${1}"
 
@@ -21,10 +27,17 @@ main() {
   tar_installed=$(if command -v tar >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "tar-installed=${tar_installed}" >> $GITHUB_OUTPUT
 
-  if [ "${input_force}" = "false" ] && command -v jolie >/dev/null 2>&1; then
-    bin_installed="true"
+  bin_installed="false"
+  if command -v jolie >/dev/null 2>&1; then
+    if [ "${input_force}" = "false" ]; then
+      msg="Installation skipped."
+      bin_installed="true"
+    else
+      msg="Executing forced installation."
+    fi
+    log_info "Jolie is found at $(which jolie). ${msg}"
   else
-    bin_installed="false"
+    log_info "Jolie is not found. Executing installation."
   fi
   echo "bin-installed=${bin_installed}" >> $GITHUB_OUTPUT
 

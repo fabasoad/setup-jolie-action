@@ -7,17 +7,17 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 . "${LIB_DIR_PATH}/logging.sh"
 
 main() {
-  log_info "Java version:"
+  log_debug "Java version:"
   java -version
-  log_info "Maven version:"
+  log_debug "Maven version:"
   mvn --version
-  log_info "bash version:"
+  log_debug "bash version:"
   bash --version
-  log_info "curl version:"
+  log_debug "curl version:"
   curl --version
-  log_info "tar version:"
+  log_debug "tar version:"
   tar --version
-  log_info "jq version:"
+  log_debug "jq version:"
   jq --version
 }
 
