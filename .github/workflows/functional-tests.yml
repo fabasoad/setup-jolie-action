@@ -70,7 +70,7 @@ jobs:
   #      - name: Print version
   #        run: jolie --version
   setup-jolie-alpine:
-    name: Setup jolie (${{ matrix.image }}, latest)
+    name: Setup jolie (${{ matrix.image }})
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 15
     container:
