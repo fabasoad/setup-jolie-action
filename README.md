@@ -32,6 +32,10 @@ None.
     # (Optional) If "false" skips installation if jolie is already installed. If
     # "true" installs jolie in any case. Defaults to "false".
     force: "false"
+    # (Optional) GitHub token that is used to send requests to GitHub API such
+    # as getting latest release. Defaults to the token provided by GitHub Actions
+    # environment.
+    github-token: "${{ github.token }}"
 ```
 
 ## Outputs
