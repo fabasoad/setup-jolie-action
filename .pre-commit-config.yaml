@@ -54,7 +54,7 @@ repos:
         stages: ["pre-push"]
   # GitHub Actions
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.5
+    rev: v1.7.6
     hooks:
       - id: actionlint
         args: ["-pyflakes="]
@@ -63,6 +63,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      - id: check-executables-have-shebangs
+        stages: ["pre-commit"]
+      - id: check-shebang-scripts-are-executable
+        stages: ["pre-commit"]
       - id: check-merge-conflict
       - id: check-json
         stages: ["pre-push"]

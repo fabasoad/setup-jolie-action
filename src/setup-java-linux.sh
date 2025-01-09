@@ -19,10 +19,9 @@ main() {
       apt install openjdk-${java_version}-jdk -y
       java_home="/usr/lib/jvm/java-${java_version}-openjdk-amd64"
     fi
+    echo "JAVA_HOME=${java_home}" >> "$GITHUB_ENV"
+    echo "${java_home}/bin" >> "$GITHUB_PATH"
   fi
-
-  echo "JAVA_HOME=${java_home}" >> "$GITHUB_ENV"
-  echo "${java_home}/bin" >> "$GITHUB_PATH"
 }
 
 main "$@"

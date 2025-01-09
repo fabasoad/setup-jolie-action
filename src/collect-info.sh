@@ -10,22 +10,22 @@ main() {
   input_force="${1}"
 
   realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "realpath-installed=${realpath_installed}" >> $GITHUB_OUTPUT
+  echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
 
   bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "bash-installed=${bash_installed}" >> $GITHUB_OUTPUT
+  echo "bash-installed=${bash_installed}" >> "$GITHUB_OUTPUT"
 
   java_installed=$(if command -v java >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "java-installed=${java_installed}" >> $GITHUB_OUTPUT
+  echo "java-installed=${java_installed}" >> "$GITHUB_OUTPUT"
 
   maven_installed=$(if command -v mvn >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "maven-installed=${maven_installed}" >> $GITHUB_OUTPUT
+  echo "maven-installed=${maven_installed}" >> "$GITHUB_OUTPUT"
 
   curl_installed=$(if command -v curl >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "curl-installed=${curl_installed}" >> $GITHUB_OUTPUT
+  echo "curl-installed=${curl_installed}" >> "$GITHUB_OUTPUT"
 
   tar_installed=$(if command -v tar >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "tar-installed=${tar_installed}" >> $GITHUB_OUTPUT
+  echo "tar-installed=${tar_installed}" >> "$GITHUB_OUTPUT"
 
   bin_installed="false"
   if command -v jolie >/dev/null 2>&1; then
@@ -39,7 +39,7 @@ main() {
   else
     log_info "Jolie is not found. Executing installation."
   fi
-  echo "bin-installed=${bin_installed}" >> $GITHUB_OUTPUT
+  echo "bin-installed=${bin_installed}" >> "$GITHUB_OUTPUT"
 
   bin_dir="jolie_$(date +%s)"
   echo "bin-dir=${bin_dir}" >> "$GITHUB_OUTPUT"
