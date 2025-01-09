@@ -70,7 +70,7 @@ runs:
       with:
         distribution: "zulu"
         java-version: "21"
-        token: "${{ github.token }}"
+        token: "${{ inputs.github-token }}"
 
     - name: Setup maven
       if: (steps.info.outputs.bin-installed == 'false'
@@ -94,7 +94,9 @@ runs:
     - name: Get latest release
       if: ${{ steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' }}
       id: latest-release
-      run: ./get-latest-release.sh "jolie/jolie" "${{ inputs.github-token }}"
+      env:
+        INPUT_GITHUB_TOKEN: "${{ inputs.github-token }}"
+      run: ./get-latest-release.sh "jolie/jolie" "${INPUT_GITHUB_TOKEN}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
