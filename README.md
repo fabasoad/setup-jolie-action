@@ -28,7 +28,7 @@ None.
 - uses: fabasoad/setup-jolie-action@v0
   with:
     # (Optional) Jolie version. Defaults to the latest version.
-    version: "1.12.2"
+    version: "1.12.5"
     # (Optional) If "false" skips installation if jolie is already installed. If
     # "true" installs jolie in any case. Defaults to "false".
     force: "false"
@@ -51,25 +51,17 @@ None.
 ### Workflow configuration
 
 ```yaml
-name: Run on Ubuntu
-
-on: push
-
-jobs:
-  setup:
-    name: jolie
-    runs-on: ubuntu-latest
-    steps:
-      - uses: fabasoad/setup-jolie-action@v0
-        with:
-          version: "1.12.1"
-      - name: Print version
-        run: jolie --version
+- uses: fabasoad/setup-jolie-action@v0
+- run: jolie --version
 ```
 
 ### Result
 
 ```shell
 Run jolie --version
-Jolie 1.12.1  (C) 2006-2022 the Jolie developers
+Jolie 1.12.5  (C) 2006-2025 the Jolie developers
 ```
+
+## Contributions
+
+![Alt](https://repobeats.axiom.co/api/embed/f26a1f85749c86ba63dbd4d7227a24f091a2e678.svg "Repobeats analytics image")
