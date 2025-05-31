@@ -9,6 +9,15 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 main() {
   input_force="${1}"
 
+  os="${RUNNER_OS}"
+  if [ "${os}" = "Linux" ]; then
+    os_release=$(grep "^ID=" "/etc/os-release" | cut -d '=' -f 2)
+    if [ "${os_release}" = "alpine" ]; then
+      os="Alpine"
+    fi
+  fi
+  echo "os=${os}" >> "$GITHUB_OUTPUT"
+
   realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
 
