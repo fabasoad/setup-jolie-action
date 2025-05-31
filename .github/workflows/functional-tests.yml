@@ -118,12 +118,12 @@ jobs:
         id: setup-jolie-1
         uses: ./
         with:
-          version: "1.12.2"
+          version: "1.13.1"
       - name: Setup Jolie 2
         id: setup-jolie-2
         uses: ./
         with:
-          version: "1.12.2"
+          version: "1.13.1"
           force: ${{ matrix.force }}
       - name: Test action completion
         run: |
