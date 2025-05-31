@@ -9,13 +9,28 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 main() {
   input_force="${1}"
 
+  os="${RUNNER_OS}"
+  if [ "${os}" = "Linux" ]; then
+    os_release=$(grep "^ID=" "/etc/os-release" | cut -d '=' -f 2)
+    if [ "${os_release}" = "alpine" ]; then
+      os="Alpine"
+    fi
+  fi
+  echo "os=${os}" >> "$GITHUB_OUTPUT"
+
   realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
 
   bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "bash-installed=${bash_installed}" >> "$GITHUB_OUTPUT"
 
-  java_installed=$(if command -v java >/dev/null 2>&1; then echo true; else echo false; fi)
+  java_installed="false"
+  if command -v java >/dev/null 2>&1; then
+    java_version=$(java -version 2>&1 | awk -F'[".]' '/version/ {if ($2 == "1") print $3; else print $2; exit}')
+    if [ "${java_version}" -ge 21 ]; then
+      java_installed="true"
+    fi
+  fi
   echo "java-installed=${java_installed}" >> "$GITHUB_OUTPUT"
 
   maven_installed=$(if command -v mvn >/dev/null 2>&1; then echo true; else echo false; fi)

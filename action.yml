@@ -57,23 +57,20 @@ runs:
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
-    - name: Setup Java (Linux)
+    - name: Setup Java (Alpine)
       if: (steps.info.outputs.bin-installed == 'false'
         && steps.info.outputs.java-installed == 'false'
-        && runner.os != 'Windows')
+        && steps.info.outputs.os == 'Alpine')
       env:
         JAVA_VERSION: "21"
-      run: ./setup-java-linux.sh "${JAVA_VERSION}"
+      run: ./setup-java-alpine.sh "${JAVA_VERSION}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
-    - name: Setup Java (Windows, macOS)
-      # windows-latest has java 8 by default which is incompatible with the latest
-      # jolie. So, we need to install java anyway.
+    - name: Setup Java (not Alpine)
       if: (steps.info.outputs.bin-installed == 'false'
-        && (runner.os == 'Windows'
-        || (steps.info.outputs.java-installed == 'false'
-        && runner.os == 'macOS')))
+        && steps.info.outputs.java-installed == 'false'
+        && steps.info.outputs.os != 'Alpine')
       uses: actions/setup-java@v4
       with:
         distribution: "zulu"
