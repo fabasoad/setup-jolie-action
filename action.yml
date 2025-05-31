@@ -57,20 +57,19 @@ runs:
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
-    - name: Setup Java (Linux)
-      if: (steps.info.outputs.bin-installed == 'false'
-        && steps.info.outputs.java-installed == 'false'
-        && runner.os == 'Linux')
-      env:
-        JAVA_VERSION: "21"
-      run: ./setup-java-linux.sh "${JAVA_VERSION}"
-      shell: sh
-      working-directory: "${{ github.action_path }}/src"
+    #    - name: Setup Java (Linux)
+    #      if: (steps.info.outputs.bin-installed == 'false'
+    #        && steps.info.outputs.java-installed == 'false'
+    #        && runner.os == 'Linux')
+    #      env:
+    #        JAVA_VERSION: "21"
+    #      run: ./setup-java-linux.sh "${JAVA_VERSION}"
+    #      shell: sh
+    #      working-directory: "${{ github.action_path }}/src"
 
     - name: Setup Java (Windows, macOS)
       if: (steps.info.outputs.bin-installed == 'false'
-        && steps.info.outputs.java-installed == 'false'
-        && runner.os != 'Linux')
+        && steps.info.outputs.java-installed == 'false')
       uses: actions/setup-java@v4
       with:
         distribution: "zulu"
