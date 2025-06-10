@@ -28,7 +28,7 @@ None.
 - uses: fabasoad/setup-jolie-action@v0
   with:
     # (Optional) Jolie version. Defaults to the latest version.
-    version: "1.12.5"
+    version: "1.13.1"
     # (Optional) If "false" skips installation if jolie is already installed. If
     # "true" installs jolie in any case. Defaults to "false".
     force: "false"
@@ -59,7 +59,7 @@ None.
 
 ```shell
 Run jolie --version
-Jolie 1.12.5  (C) 2006-2025 the Jolie developers
+Jolie 1.13.1  (C) 2006-2025 the Jolie developers
 ```
 
 ## Contributions
