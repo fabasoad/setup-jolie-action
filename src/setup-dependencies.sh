@@ -65,9 +65,9 @@ _setup_unzip() {
 
 main() {
   realpath_installed="${1}"
-  bash_installed="${2}"
-  curl_installed="${3}"
-  unzip_installed="${4}"
+  unzip_installed="${2}"
+  bash_installed="${3:-true}"
+  curl_installed="${4:-true}"
 
   _update "$@"
 
