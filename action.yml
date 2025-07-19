@@ -121,7 +121,7 @@ runs:
 
     - name: Install jolie (not Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
-      id: install-jolie-windows
+      id: install-jolie-not-windows
       run: |
         java \
           -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
@@ -131,14 +131,9 @@ runs:
         echo "${GITHUB_ACTION_PATH}/jolie/launchers" >> "$GITHUB_PATH"
       shell: sh
 
-    - name: Set output (not Windows)
-      if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
-      run: echo "SETUP_JOLIE_ACTION_OUTCOME=${{ steps.install-jolie-not-windows.outcome }}" >> "$GITHUB_ENV"
-      shell: sh
-
     - name: Install jolie (Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
-      id: install-jolie-not-windows
+      id: install-jolie-windows
       run: |
         mvn install -Dmaven.test.skip=true --quiet
         bin_path="${{ steps.info.outputs.bin-path }}"
@@ -148,6 +143,11 @@ runs:
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
       shell: bash
       working-directory: "${{ steps.info.outputs.bin-path }}"
+
+    - name: Set output (not Windows)
+      if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
+      run: echo "SETUP_JOLIE_ACTION_OUTCOME=${{ steps.install-jolie-not-windows.outcome }}" >> "$GITHUB_ENV"
+      shell: sh
 
     - name: Set output (Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
