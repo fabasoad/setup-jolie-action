@@ -61,7 +61,8 @@ runs:
       run: |
         ./setup-dependencies.sh \
           "${{ steps.info.outputs.realpath-installed }}" \
-          "${{ steps.info.outputs.curl-installed }}"
+          "${{ steps.info.outputs.curl-installed }}" \
+          "${{ steps.info.outputs.unzip-installed }}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
@@ -105,13 +106,12 @@ runs:
         repository: "jolie/jolie"
         tag: "${{ format('v{0}', inputs.version == 'latest' && steps.latest-release.outputs.version || inputs.version) }}"
         fileName: "jolie-*.jar"
-        out-file-path: "jolie-installer.jar"
 
     - name: Install jolie
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       id: install-jolie
       run: |
-        java \
+        java -y \
           -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
           -jh ${GITHUB_ACTION_PATH}/jolie/dist \
           -jl ${GITHUB_ACTION_PATH}/jolie/launchers

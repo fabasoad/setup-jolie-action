@@ -39,9 +39,22 @@ _setup_curl() {
   fi
 }
 
+_setup_unzip() {
+  if [ "${RUNNER_OS}" = "Linux" ]; then
+    if [ -f "/etc/alpine-release" ]; then
+      apk add unzip
+    else
+      apt-get install unzip -y
+    fi
+  elif [ "${RUNNER_OS}" = "macOS" ]; then
+    brew install unzip
+  fi
+}
+
 main() {
   realpath_installed="${1}"
   curl_installed="${2}"
+  unzip_installed="${3}"
 
   _update "$@"
 
@@ -51,6 +64,10 @@ main() {
 
   if [ "${curl_installed}" = "false" ]; then
     _setup_curl
+  fi
+
+  if [ "${unzip_installed}" = "false" ]; then
+    _setup_unzip
   fi
 }
 
