@@ -31,7 +31,7 @@ inputs:
 outputs:
   installed:
     description: Whether jolie was installed or not.
-    value: "${{ steps.install-jolie.outcome == 'success' }}"
+    value: "${{ (runner.os == 'Windows' && steps.install-jolie-windows.outcome == 'success') || (runner.os != 'Windows' && steps.install-jolie-not-windows.outcome == 'success') }}"
 runs:
   using: "composite"
   steps:
@@ -121,7 +121,7 @@ runs:
 
     - name: Install jolie (not Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
-      id: install-jolie
+      id: install-jolie-windows
       run: |
         java \
           -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
@@ -133,7 +133,7 @@ runs:
 
     - name: Install jolie (Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
-      id: install-jolie
+      id: install-jolie-not-windows
       run: |
         mvn install -Dmaven.test.skip=true --quiet
         bin_path="${{ steps.info.outputs.bin-path }}"
