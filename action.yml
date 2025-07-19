@@ -31,7 +31,7 @@ inputs:
 outputs:
   installed:
     description: Whether jolie was installed or not.
-    value: "${{ (runner.os == 'Windows' && steps.install-jolie-windows.outcome == 'success') || (runner.os != 'Windows' && steps.install-jolie-not-windows.outcome == 'success') }}"
+    value: "${{ env.SETUP_JOLIE_ACTION_OUTCOME == 'success' }}"
 runs:
   using: "composite"
   steps:
@@ -131,6 +131,11 @@ runs:
         echo "${GITHUB_ACTION_PATH}/jolie/launchers" >> "$GITHUB_PATH"
       shell: sh
 
+    - name: Set output (not Windows)
+      if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
+      run: echo "SETUP_JOLIE_ACTION_OUTCOME=${{ steps.install-jolie-not-windows.outcome }}" >> "$GITHUB_ENV"
+      shell: sh
+
     - name: Install jolie (Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
       id: install-jolie-not-windows
@@ -143,6 +148,11 @@ runs:
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
       shell: bash
       working-directory: "${{ steps.info.outputs.bin-path }}"
+
+    - name: Set output (Windows)
+      if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
+      run: echo "SETUP_JOLIE_ACTION_OUTCOME=${{ steps.install-jolie-windows.outcome }}" >> "$GITHUB_ENV"
+      shell: sh
 
     - name: Print version
       run: jolie --version
