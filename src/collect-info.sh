@@ -30,6 +30,9 @@ main() {
   fi
   echo "java-installed=${java_installed}" >> "$GITHUB_OUTPUT"
 
+  curl_installed=$(if command -v curl >/dev/null 2>&1; then echo true; else echo false; fi)
+  echo "curl-installed=${curl_installed}" >> "$GITHUB_OUTPUT"
+
   bin_installed="false"
   if command -v jolie >/dev/null 2>&1; then
     if [ "${input_force}" = "false" ]; then

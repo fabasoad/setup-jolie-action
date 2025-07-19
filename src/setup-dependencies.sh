@@ -27,13 +27,30 @@ _setup_dependencies_for_realpath() {
   fi
 }
 
+_setup_curl() {
+  if [ "${RUNNER_OS}" = "Linux" ]; then
+    if [ -f "/etc/alpine-release" ]; then
+      apk add curl
+    else
+      apt-get install curl -y
+    fi
+  elif [ "${RUNNER_OS}" = "macOS" ]; then
+    brew install curl
+  fi
+}
+
 main() {
   realpath_installed="${1}"
+  curl_installed="${2}"
 
   _update "$@"
 
   if [ "${realpath_installed}" = "false" ]; then
     _setup_dependencies_for_realpath
+  fi
+
+  if [ "${curl_installed}" = "false" ]; then
+    _setup_curl
   fi
 }
 

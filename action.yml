@@ -59,7 +59,9 @@ runs:
     - name: Setup dependencies
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       run: |
-        ./setup-dependencies.sh "${{ steps.info.outputs.realpath-installed }}"
+        ./setup-dependencies.sh \
+          "${{ steps.info.outputs.realpath-installed }}" \
+          "${{ steps.info.outputs.curl-installed }}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
@@ -82,6 +84,10 @@ runs:
         distribution: "temurin"
         java-version: "21"
         token: "${{ inputs.github-token }}"
+
+    - name: Setup jq
+      if: ${{ steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' }}
+      uses: dcarbone/install-jq-action@v3
 
     - name: Get latest release
       if: ${{ steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' }}
