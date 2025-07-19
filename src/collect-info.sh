@@ -21,6 +21,9 @@ main() {
   realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
 
+  bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
+  echo "bash-installed=${bash_installed}" >> "$GITHUB_OUTPUT"
+
   java_installed="false"
   if command -v java >/dev/null 2>&1; then
     java_version=$(java -version 2>&1 | awk -F'[".]' '/version/ {if ($2 == "1") print $3; else print $2; exit}')
@@ -52,6 +55,9 @@ main() {
 
   bin_dir="jolie_$(date +%s)"
   echo "bin-dir=${bin_dir}" >> "$GITHUB_OUTPUT"
+
+  bin_path="$GITHUB_WORKSPACE/${bin_dir}"
+  echo "bin-path=${bin_path}" >> "$GITHUB_OUTPUT"
 }
 
 main "$@"

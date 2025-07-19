@@ -27,6 +27,18 @@ _setup_dependencies_for_realpath() {
   fi
 }
 
+_setup_bash() {
+  if [ "${RUNNER_OS}" = "Linux" ]; then
+    if [ -f "/etc/alpine-release" ]; then
+      apk add bash
+    else
+      apt-get install bash -y
+    fi
+  elif [ "${RUNNER_OS}" = "macOS" ]; then
+    brew install bash
+  fi
+}
+
 _setup_curl() {
   if [ "${RUNNER_OS}" = "Linux" ]; then
     if [ -f "/etc/alpine-release" ]; then
@@ -53,13 +65,18 @@ _setup_unzip() {
 
 main() {
   realpath_installed="${1}"
-  curl_installed="${2}"
-  unzip_installed="${3}"
+  bash_installed="${2}"
+  curl_installed="${3}"
+  unzip_installed="${4}"
 
   _update "$@"
 
   if [ "${realpath_installed}" = "false" ]; then
     _setup_dependencies_for_realpath
+  fi
+
+  if [ "${bash_installed}" = "false" ]; then
+    _setup_bash
   fi
 
   if [ "${curl_installed}" = "false" ]; then
