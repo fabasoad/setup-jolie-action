@@ -98,7 +98,7 @@ runs:
       with:
         repository: "jolie/jolie"
         tag: "${{ format('v{0}', inputs.version == 'latest' && steps.latest-release.outputs.version || inputs.version) }}"
-        fileName: "*.jar"
+        fileName: "jolie-*.jar"
         out-file-path: "jolie-installer.jar"
 
     - name: Install jolie
@@ -106,7 +106,7 @@ runs:
       id: install-jolie
       run: |
         java \
-          -jar ${{ fromJson(steps.download-release.outputs.downloaded_files)[0] }} \
+          -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
           -jh ${GITHUB_ACTION_PATH}/jolie/dist \
           -jl ${GITHUB_ACTION_PATH}/jolie/launchers
         echo "JOLIE_HOME=${GITHUB_ACTION_PATH}/jolie/dist" >> "$GITHUB_ENV"
