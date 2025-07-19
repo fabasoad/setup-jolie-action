@@ -106,12 +106,13 @@ runs:
         repository: "jolie/jolie"
         tag: "${{ format('v{0}', inputs.version == 'latest' && steps.latest-release.outputs.version || inputs.version) }}"
         fileName: "jolie-*.jar"
+        out-file-path: "${{ steps.info.outputs.bin-dir }}"
 
     - name: Install jolie
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       id: install-jolie
       run: |
-        java -y \
+        java \
           -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
           -jh ${GITHUB_ACTION_PATH}/jolie/dist \
           -jl ${GITHUB_ACTION_PATH}/jolie/launchers

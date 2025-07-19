@@ -49,6 +49,9 @@ main() {
     log_info "Jolie is not found. Executing installation."
   fi
   echo "bin-installed=${bin_installed}" >> "$GITHUB_OUTPUT"
+
+  bin_dir="jolie_$(date +%s)"
+  echo "bin-dir=${bin_dir}" >> "$GITHUB_OUTPUT"
 }
 
 main "$@"
