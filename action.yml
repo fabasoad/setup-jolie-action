@@ -13,11 +13,11 @@ inputs:
   jolie-installation-mode:
     description: |
       Dictates the installation process for jolie CLI. There are 3 options: "skip"
-      - does not install jolie; "skip-if-exists" - installs only if jolie is not
+      - does not install jolie; "idempotent" - installs only if jolie is not
       present on the runner, otherwise skips the installation; "always" - installs
       jolie even if it is already present on the runner.
     required: false
-    default: "skip-if-exists"
+    default: "idempotent"
   jpm-version:
     description: jpm (jolie package manager) version. Defaults to the latest version.
     required: false
@@ -25,11 +25,11 @@ inputs:
   jpm-installation-mode:
     description: |
       Dictates the installation process for jpm (jolie package manager). There
-      are 3 options: "skip" - does not install jpm; "skip-if-exists" - installs
+      are 3 options: "skip" - does not install jpm; "idempotent" - installs
       only if jpm is not present on the runner, otherwise skips the installation;
       "always" - installs jpm even if it is already present on the runner.
     required: false
-    default: "skip-if-exists"
+    default: "idempotent"
   github-token:
     description: |
       GitHub token that is used to send requests to GitHub API such as getting
@@ -174,5 +174,8 @@ runs:
     # Windows: Completed
 
     - name: Print version
-      run: jolie --version
+      env:
+        INPUT_JOLIE_INSTALLATION_MODE: "${{ inputs.jolie-installation-mode }}"
+      run: ./print-version.sh "${INPUT_JOLIE_INSTALLATION_MODE}"
       shell: sh
+      working-directory: "${{ github.action_path }}/src"

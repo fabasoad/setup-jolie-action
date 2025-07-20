@@ -47,7 +47,7 @@ main() {
       msg="Installation skipped."
       jolie_installed="true"
     fi
-    log_info "Jolie is found at $(which jolie). ${msg}"
+    log_info "jolie is found at $(which jolie). ${msg}"
   else
     if [ "${input_jolie_installation_mode}" = "skip" ]; then
       msg="Installation skipped anyway."
@@ -55,7 +55,7 @@ main() {
     else
       msg="Executing installation."
     fi
-    log_info "Jolie is not found. ${msg}"
+    log_info "jolie is not found. ${msg}"
   fi
   echo "jolie-installed=${jolie_installed}" >> "$GITHUB_OUTPUT"
 

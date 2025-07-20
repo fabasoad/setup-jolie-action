@@ -30,17 +30,19 @@ None.
     # (Optional) Jolie version. Defaults to the latest version.
     jolie-version: "latest"
     # (Optional) Dictates the installation process for jolie. There are 3 options:
-    # "skip" - does not install jolie; "skip-if-exists" - installs only if jolie
+    # "skip" - does not install jolie; "idempotent" - installs only if jolie
     # is not present on the runner, otherwise skips the installation; "always" -
-    # installs jolie even if it is already present on the runner.
-    jolie-installation-mode: "skip-if-exists"
+    # installs jolie even if it is already present on the runner. Defaults to
+    # "idempotent".
+    jolie-installation-mode: "idempotent"
     # (Optional) jpm (jolie package manager) version. Defaults to the latest version.
     jpm-version: "latest"
     # (Optional) Dictates the installation process for jpm (jolie package manager).
-    # There are 3 options: "skip" - does not install jpm; "skip-if-exists" -
+    # There are 3 options: "skip" - does not install jpm; "idempotent" -
     # installs only if jpm is not present on the runner, otherwise skips the installation;
-    # "always" - installs jpm even if it is already present on the runner.
-    jpm-installation-mode: "skip-if-exists"
+    # "always" - installs jpm even if it is already present on the runner. Defaults
+    # to "idempotent".
+    jpm-installation-mode: "idempotent"
     # (Optional) GitHub token that is used to send requests to GitHub API such
     # as getting latest release. Defaults to the token provided by GitHub Actions
     # environment.

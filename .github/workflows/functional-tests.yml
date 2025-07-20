@@ -110,7 +110,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jolie-installation-mode: ["skip", "skip-if-exists", "always"]
+        jolie-installation-mode: ["skip", "idempotent", "always"]
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
