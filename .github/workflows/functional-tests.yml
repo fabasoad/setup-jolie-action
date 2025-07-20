@@ -21,8 +21,8 @@ defaults:
 
 jobs:
   # TODO: Add matrix tests for jpm-version
-  get-versions:
-    name: Get 3 latest versions
+  get-jolie-versions:
+    name: Get 3 latest jolie versions
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -46,14 +46,14 @@ jobs:
           echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   setup-jolie:
     name: Setup jolie
-    needs: [get-versions]
+    needs: [get-jolie-versions]
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu", "windows", "macos"]
-        jolie-version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
+        jolie-version: ${{ fromJSON(needs.get-jolie-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4

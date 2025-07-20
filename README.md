@@ -11,11 +11,11 @@ This action installs [Jolie](https://www.jolie-lang.org) and [JPM](https://www.n
 ## Supported OS
 
 <!-- prettier-ignore-start -->
-| OS      | Supported          | Execution time |
-|---------|--------------------|----------------|
-| Windows | :white_check_mark: | 2m 27s         |
-| Linux   | :white_check_mark: | 10s            |
-| macOS   | :white_check_mark: | 6s             |
+| OS      | Supported          |
+|---------|--------------------|
+| Windows | :white_check_mark: |
+| Linux   | :white_check_mark: |
+| macOS   | :white_check_mark: |
 <!-- prettier-ignore-end -->
 
 ## Prerequisites

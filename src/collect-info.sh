@@ -19,12 +19,6 @@ main() {
   fi
   echo "os=${os}" >> "$GITHUB_OUTPUT"
 
-  realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
-
-  bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "bash-installed=${bash_installed}" >> "$GITHUB_OUTPUT"
-
   java_installed="false"
   if command -v java >/dev/null 2>&1; then
     java_version=$(java -version 2>&1 | awk -F'[".]' '/version/ {if ($2 == "1") print $3; else print $2; exit}')
@@ -33,12 +27,6 @@ main() {
     fi
   fi
   echo "java-installed=${java_installed}" >> "$GITHUB_OUTPUT"
-
-  curl_installed=$(if command -v curl >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "curl-installed=${curl_installed}" >> "$GITHUB_OUTPUT"
-
-  unzip_installed=$(if command -v unzip >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "unzip-installed=${unzip_installed}" >> "$GITHUB_OUTPUT"
 
   # jolie
   jolie_installed="false"
@@ -76,7 +64,7 @@ main() {
       msg="Installation skipped."
       jpm_installed="true"
     fi
-    log_info "jpm is found at $(which jolie). ${msg}"
+    log_info "jpm is found at $(which jpm). ${msg}"
   else
     if [ "${input_jpm_installation_mode}" = "skip" ]; then
       msg="Installation skipped anyway."
