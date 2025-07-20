@@ -6,11 +6,11 @@ branding:
   icon: terminal
   color: gray-dark
 inputs:
-  version:
+  jolie-version:
     description: Jolie version. Defaults to the latest version.
     required: false
     default: "latest"
-  force:
+  force: # TODO: rename this
     description: |
       If "false" skips installation if jolie is already installed. If "true"
       installs jolie in any case. Defaults to "false".
@@ -37,12 +37,12 @@ runs:
   steps:
     - name: Validate inputs
       env:
-        INPUT_VERSION: "${{ inputs.version }}"
+        INPUT_JOLIE_VERSION: "${{ inputs.jolie-version }}"
         INPUT_FORCE: "${{ inputs.force }}"
         INPUT_INSTALL_JPM: "${{ inputs.install-jpm }}"
       run: |
         ./validate-inputs.sh \
-          "${INPUT_VERSION}" \
+          "${INPUT_JOLIE_VERSION}" \
           "${INPUT_FORCE}" \
           "${INPUT_INSTALL_JPM}"
       shell: sh
@@ -92,10 +92,11 @@ runs:
       uses: robinraju/release-downloader@v1
       with:
         repository: "jolie/jolie"
-        tag: "${{ format('v{0}', inputs.version) }}"
-        latest: "${{ inputs.version == 'latest' }}"
+        tag: "${{ format('v{0}', inputs.jolie-version) }}"
+        latest: "${{ inputs.jolie-version == 'latest' }}"
         fileName: "jolie-*.jar"
         out-file-path: "${{ steps.info.outputs.bin-dir }}"
+        token: "${{ inputs.github-token }}"
 
     - name: Install Jolie (not Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os != 'Windows'
@@ -112,7 +113,7 @@ runs:
 
     # Windows: Started
     - name: Setup dependencies required for getting latest release
-      if: steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' && runner.os == 'Windows'
+      if: steps.info.outputs.bin-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
       run: |
         ./setup-dependencies.sh \
           "true" \
@@ -123,12 +124,12 @@ runs:
       working-directory: "${{ github.action_path }}/src"
 
     - name: Setup jq
-      if: steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' && runner.os == 'Windows'
+      if: steps.info.outputs.bin-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
       uses: dcarbone/install-jq-action@v3
 
-    - name: Get latest release
-      if: steps.info.outputs.bin-installed == 'false' && inputs.version == 'latest' && runner.os == 'Windows'
-      id: latest-release
+    - name: Get latest Jolie release
+      if: steps.info.outputs.bin-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
+      id: latest-jolie-release
       env:
         INPUT_GITHUB_TOKEN: "${{ inputs.github-token }}"
       run: ./get-latest-release.sh "jolie/jolie" "${INPUT_GITHUB_TOKEN}"
@@ -140,9 +141,10 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: "jolie/jolie"
-        ref: ${{ format('v{0}', inputs.version == 'latest' && steps.latest-release.outputs.version || inputs.version) }}
+        ref: ${{ format('v{0}', inputs.jolie-version == 'latest' && steps.latest-jolie-release.outputs.version || inputs.jolie-version) }}
         fetch-depth: 1
         path: ${{ steps.info.outputs.bin-dir }}
+        token: "${{ inputs.github-token }}"
 
     - name: Install Jolie (Windows)
       if: steps.info.outputs.bin-installed == 'false' && runner.os == 'Windows'
@@ -154,6 +156,7 @@ runs:
         echo "${bin_path}" >> "$GITHUB_PATH"
         ./scripts/dev-setup.sh "${bin_path}"
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
+        ls -la ${bin_path}/jolie-dist
       shell: bash
       working-directory: "${{ steps.info.outputs.bin-path }}"
     # Windows: Completed
