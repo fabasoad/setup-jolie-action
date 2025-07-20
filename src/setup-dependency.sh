@@ -58,7 +58,7 @@ _setup_npm() {
   if [ "${OS}" = "Alpine" ]; then
     apk add --update npm
   elif [ "${OS}" = "Linux" ]; then
-    apt install nodejs
+    apt install nodejs -y
   elif [ "${OS}" = "macOS" ]; then
     brew install node
   elif [ "${OS}" = "Windows" ]; then
