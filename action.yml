@@ -185,18 +185,7 @@ runs:
       if: steps.info.outputs.jpm-installed == 'false'
       env:
         OS: "${{ steps.info.outputs.os }}"
-      run: |
-        ./setup-dependency.sh "realpath"
-        ./setup-dependency.sh "bash"
-        ./setup-dependency.sh "curl"
-      shell: sh
-      working-directory: "${{ github.action_path }}/src"
-
-    - name: Setup node
-      if: steps.info.outputs.jpm-installed == 'false'
-      run: |
-        curl -o- https://fnm.vercel.app/install | bash
-        fnm install --lts
+      run: ./setup-dependency.sh "npm"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 

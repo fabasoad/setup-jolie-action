@@ -53,11 +53,23 @@ _setup_unzip() {
   fi
 }
 
+_setup_npm() {
+  if [ "${OS}" = "macOS" ]; then
+    brew install node
+  elif [ "${OS}" = "Windows" ]; then
+    choco install nodejs
+  else
+    _setup_bash
+    _setup_curl
+    curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell
+  fi
+}
+
 main() {
   dependency_name="${1}"
 
   if ! command -v "${dependency_name}" >/dev/null 2>&1; then
-    _update "$@"
+    _update
     _setup_${dependency_name}
   fi
 }
