@@ -185,8 +185,16 @@ runs:
       if: steps.info.outputs.jpm-installed == 'false'
       env:
         OS: "${{ steps.info.outputs.os }}"
-      run: ./setup-dependency.sh "npm"
+      run: ./setup-dependency.sh "bash"
       shell: sh
+      working-directory: "${{ github.action_path }}/src"
+
+    - name: Setup npm
+      if: steps.info.outputs.jpm-installed == 'false'
+      env:
+        OS: "${{ steps.info.outputs.os }}"
+      run: ./setup-dependency.sh "npm"
+      shell: bash
       working-directory: "${{ github.action_path }}/src"
 
     - name: Install jpm

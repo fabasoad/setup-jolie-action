@@ -63,11 +63,8 @@ _setup_npm() {
     _setup_curl
     fnm_bin_dir="${RUNNER_TEMP}/fnm_$(date +%s)"
     mkdir -p "${fnm_bin_dir}"
-    curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell --install-dir "${fnm_bin_dir}"
-    ${fnm_bin_dir}/fnm install --lts
-    node --version || echo 'failed 1'
-    ${fnm_bin_dir}/fnm env
-    node --version || echo 'failed 2'
+    curl -o- https://fnm.vercel.app/install | bash -s -- --install-dir "${fnm_bin_dir}"
+    fnm install --lts
   fi
 }
 
