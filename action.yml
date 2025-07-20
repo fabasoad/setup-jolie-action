@@ -72,6 +72,8 @@ runs:
 
     - name: Setup dependencies required for jolie
       if: steps.info.outputs.jolie-installed == 'false'
+      env:
+        OS: "${{ steps.info.outputs.os }}"
       run: |
         ./setup-dependency.sh "realpath"
         ./setup-dependency.sh "unzip"
@@ -127,8 +129,9 @@ runs:
     # Windows: Started
     - name: Setup dependencies required for getting latest release
       if: steps.info.outputs.jolie-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
+      env:
+        OS: "${{ steps.info.outputs.os }}"
       run: |
-        ./setup-dependency.sh "bash"
         ./setup-dependency.sh "curl"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
@@ -180,6 +183,8 @@ runs:
     # jpm: Started
     - name: Setup dependencies required for jpm
       if: steps.info.outputs.jpm-installed == 'false'
+      env:
+        OS: "${{ steps.info.outputs.os }}"
       run: |
         ./setup-dependency.sh "realpath"
         ./setup-dependency.sh "bash"

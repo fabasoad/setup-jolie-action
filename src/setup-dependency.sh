@@ -1,89 +1,64 @@
 #!/usr/bin/env sh
 
 _update() {
-  for arg in "$@"; do
-    if [ "$arg" = "false" ]; then
-      if [ "${RUNNER_OS}" = "Linux" ]; then
-        if [ -f "/etc/alpine-release" ]; then
-          apk update
-        else
-          apt-get update
-        fi
-      fi
-      break
+  if [ "${SETUP_JOLIE_ACTION_UPDATE}" != "true" ]; then
+    if [ "${OS}" = "Alpine" ]; then
+      apk update
+    elif [ "${OS}" = "Linux" ]; then
+      apt-get update
     fi
-  done
+    echo "SETUP_JOLIE_ACTION_UPDATE=true" >> "$GITHUB_ENV"
+  fi
 }
 
-_setup_dependencies_for_realpath() {
-  if command -v realpath >/dev/null 2>&1; then
-    if [ "${RUNNER_OS}" = "Linux" ]; then
-      if [ -f "/etc/alpine-release" ]; then
-        apk add coreutils
-      else
-        apt-get install coreutils -y
-      fi
-    elif [ "${RUNNER_OS}" = "macOS" ]; then
-      brew install coreutils
-    fi
+_setup_realpath() {
+  if [ "${OS}" = "Alpine" ]; then
+    apk add coreutils
+  elif [ "${OS}" = "Linux" ]; then
+    apt-get install coreutils -y
+  elif [ "${OS}" = "macOS" ]; then
+    brew install coreutils
   fi
 }
 
 _setup_bash() {
-  if command -v bash >/dev/null 2>&1; then
-    if [ "${RUNNER_OS}" = "Linux" ]; then
-      if [ -f "/etc/alpine-release" ]; then
-        apk add bash
-      else
-        apt-get install bash -y
-      fi
-    elif [ "${RUNNER_OS}" = "macOS" ]; then
-      brew install bash
-    fi
+  if [ "${OS}" = "Alpine" ]; then
+    apk add bash
+  elif [ "${OS}" = "Linux" ]; then
+    apt-get install bash -y
+  elif [ "${OS}" = "macOS" ]; then
+    brew install bash
   fi
 }
 
 _setup_curl() {
-  if command -v curl >/dev/null 2>&1; then
-    if [ "${RUNNER_OS}" = "Linux" ]; then
-      if [ -f "/etc/alpine-release" ]; then
-        apk add curl
-      else
-        apt-get install curl -y
-      fi
-    elif [ "${RUNNER_OS}" = "macOS" ]; then
-      brew install curl
-    fi
+  if [ "${OS}" = "Alpine" ]; then
+    apk add curl
+  elif [ "${OS}" = "Linux" ]; then
+    apt-get install curl -y
+  elif [ "${OS}" = "macOS" ]; then
+    brew install curl
+  elif [ "${OS}" = "Windows" ]; then
+    choco install curl
   fi
 }
 
 _setup_unzip() {
-  if command -v unzip >/dev/null 2>&1; then
-    if [ "${RUNNER_OS}" = "Linux" ]; then
-      if [ -f "/etc/alpine-release" ]; then
-        apk add unzip
-      else
-        apt-get install unzip -y
-      fi
-    elif [ "${RUNNER_OS}" = "macOS" ]; then
-      brew install unzip
-    fi
+  if [ "${OS}" = "Alpine" ]; then
+    apk add unzip
+  elif [ "${OS}" = "Linux" ]; then
+    apt-get install unzip -y
+  elif [ "${OS}" = "macOS" ]; then
+    brew install unzip
   fi
 }
 
 main() {
   dependency_name="${1}"
 
-  _update "$@"
-
-  if [ "${dependency_name}" = "realpath" ]; then
-    _setup_dependencies_for_realpath
-  elif [ "${dependency_name}" = "bash" ]; then
-    _setup_bash
-  elif [ "${dependency_name}" = "curl" ]; then
-    _setup_curl
-  elif [ "${dependency_name}" = "unzip" ]; then
-    _setup_unzip
+  if ! command -v "${dependency_name}" >/dev/null 2>&1; then
+    _update "$@"
+    _setup_${dependency_name}
   fi
 }
 
