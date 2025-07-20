@@ -8,6 +8,7 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 
 main() {
   input_jolie_installation_mode="${1}"
+  input_jpm_installation_mode="${2}"
 
   os="${RUNNER_OS}"
   if [ "${os}" = "Linux" ]; then
@@ -39,6 +40,7 @@ main() {
   unzip_installed=$(if command -v unzip >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "unzip-installed=${unzip_installed}" >> "$GITHUB_OUTPUT"
 
+  # jolie
   jolie_installed="false"
   if command -v jolie >/dev/null 2>&1; then
     if [ "${input_jolie_installation_mode}" = "always" ]; then
@@ -64,6 +66,27 @@ main() {
 
   jolie_path="$GITHUB_WORKSPACE/${jolie_dir}"
   echo "jolie-path=${jolie_path}" >> "$GITHUB_OUTPUT"
+
+  # jpm
+  jpm_installed="false"
+  if command -v jpm >/dev/null 2>&1; then
+    if [ "${input_jpm_installation_mode}" = "always" ]; then
+      msg="Executing forced installation."
+    else
+      msg="Installation skipped."
+      jpm_installed="true"
+    fi
+    log_info "jpm is found at $(which jolie). ${msg}"
+  else
+    if [ "${input_jpm_installation_mode}" = "skip" ]; then
+      msg="Installation skipped anyway."
+      jpm_installed="true"
+    else
+      msg="Executing installation."
+    fi
+    log_info "jpm is not found. ${msg}"
+  fi
+  echo "jpm-installed=${jpm_installed}" >> "$GITHUB_OUTPUT"
 }
 
 main "$@"

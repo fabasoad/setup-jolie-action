@@ -20,6 +20,7 @@ defaults:
     shell: sh
 
 jobs:
+  # TODO: Add matrix tests for jpm-version
   get-versions:
     name: Get 3 latest versions
     runs-on: ubuntu-latest
@@ -61,6 +62,7 @@ jobs:
         uses: ./
         with:
           jolie-version: ${{ matrix.jolie-version }}
+          jpm-installation-mode: "skip"
       - name: Test action completion
         run: |
           test_equal() {
@@ -72,10 +74,13 @@ jobs:
           test_equal "jolie should be installed" \
             "${{ steps.setup-jolie.outputs.jolie-installed }}" \
             "true"
+          test_equal "jpm should not be installed" \
+            "${{ steps.setup-jolie.outputs.jpm-installed }}" \
+            "false"
       - name: Print version
         run: jolie --version
-  setup-jolie-in-container:
-    name: Setup jolie in container (${{ matrix.image }}, latest)
+  setup-jolie-jpm-in-container:
+    name: Setup jolie & jpm in container (${{ matrix.image }}, latest)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     container:
@@ -101,16 +106,21 @@ jobs:
           test_equal "jolie should be installed" \
             "${{ steps.setup-jolie.outputs.jolie-installed }}" \
             "true"
+          test_equal "jpm should be installed" \
+            "${{ steps.setup-jolie.outputs.jpm-installed }}" \
+            "true"
       - name: Print version
-        run: jolie --version
-  test-jolie-installation-mode:
-    name: Test jolie installation mode
+        run: |
+          jolie --version
+          jpm --version
+  test-jolie-jpm-installation-mode:
+    name: Test jolie & jpm installation mode
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        jolie-installation-mode: ["skip", "idempotent", "always"]
+        installation-mode: ["skip", "idempotent", "always"]
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
@@ -118,12 +128,14 @@ jobs:
         id: setup-jolie-1
         uses: ./
         with:
-          jolie-installation-mode: "${{ matrix.jolie-installation-mode }}"
+          jolie-installation-mode: "${{ matrix.installation-mode }}"
+          jpm-installation-mode: "${{ matrix.installation-mode }}"
       - name: Setup Jolie 2
         id: setup-jolie-2
         uses: ./
         with:
-          jolie-installation-mode: "${{ matrix.jolie-installation-mode }}"
+          jolie-installation-mode: "${{ matrix.installation-mode }}"
+          jpm-installation-mode: "${{ matrix.installation-mode }}"
       - name: Test action completion
         run: |
           test_equal() {
@@ -134,7 +146,13 @@ jobs:
           }
           test_equal "Wrong \"jolie-installed\" output from setup-jolie-1" \
             "${{ steps.setup-jolie-1.outputs.jolie-installed }}" \
-            "${{ matrix.jolie-installation-mode != 'skip' }}"
+            "${{ matrix.installation-mode != 'skip' }}"
           test_equal "Wrong \"jolie-installed\" output from setup-jolie-2" \
             "${{ steps.setup-jolie-2.outputs.jolie-installed }}" \
-            "${{ matrix.jolie-installation-mode == 'always' }}"
+            "${{ matrix.installation-mode == 'always' }}"
+          test_equal "Wrong \"jpm-installed\" output from setup-jolie-1" \
+            "${{ steps.setup-jolie-1.outputs.jpm-installed }}" \
+            "${{ matrix.installation-mode != 'skip' }}"
+          test_equal "Wrong \"jpm-installed\" output from setup-jolie-2" \
+            "${{ steps.setup-jolie-2.outputs.jpm-installed }}" \
+            "${{ matrix.installation-mode == 'always' }}"
