@@ -156,7 +156,8 @@ runs:
         echo "${bin_path}" >> "$GITHUB_PATH"
         ./scripts/dev-setup.sh "${bin_path}"
         echo "JOLIE_HOME=${bin_path}/jolie-dist" >> "$GITHUB_ENV"
-        ls -la ${bin_path}/jolie-dist
+        echo "${bin_path}/launchers" >> "$GITHUB_PATH"
+        ls -la ${bin_path}
       shell: bash
       working-directory: "${{ steps.info.outputs.bin-path }}"
     # Windows: Completed
