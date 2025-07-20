@@ -41,11 +41,15 @@ check_semver() {
 }
 
 main() {
-  input_version="${1}"
-  input_force="${2}"
+  input_jolie_version="${1}"
+  input_jolie_installation_mode="${2}"
+  input_jpm_version="${3}"
+  input_jpm_installation_mode="${4}"
 
-  check_semver "version" "${input_version}"
-  check_enum "force" "${input_force}" "true,false"
+  check_semver "jolie-version" "${input_jolie_version}"
+  check_enum "jolie-installation-mode" "${input_jolie_installation_mode}" "skip,idempotent,always"
+  check_semver "jpm-version" "${input_jpm_version}"
+  check_enum "jpm-installation-mode" "${input_jpm_installation_mode}" "skip,idempotent,always"
 }
 
 main "$@"

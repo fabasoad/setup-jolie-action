@@ -7,7 +7,8 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 . "${LIB_DIR_PATH}/logging.sh"
 
 main() {
-  input_force="${1}"
+  input_jolie_installation_mode="${1}"
+  input_jpm_installation_mode="${2}"
 
   os="${RUNNER_OS}"
   if [ "${os}" = "Linux" ]; then
@@ -18,12 +19,6 @@ main() {
   fi
   echo "os=${os}" >> "$GITHUB_OUTPUT"
 
-  realpath_installed=$(if command -v realpath >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "realpath-installed=${realpath_installed}" >> "$GITHUB_OUTPUT"
-
-  bash_installed=$(if command -v bash >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "bash-installed=${bash_installed}" >> "$GITHUB_OUTPUT"
-
   java_installed="false"
   if command -v java >/dev/null 2>&1; then
     java_version=$(java -version 2>&1 | awk -F'[".]' '/version/ {if ($2 == "1") print $3; else print $2; exit}')
@@ -33,34 +28,53 @@ main() {
   fi
   echo "java-installed=${java_installed}" >> "$GITHUB_OUTPUT"
 
-  maven_installed=$(if command -v mvn >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "maven-installed=${maven_installed}" >> "$GITHUB_OUTPUT"
-
-  curl_installed=$(if command -v curl >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "curl-installed=${curl_installed}" >> "$GITHUB_OUTPUT"
-
-  tar_installed=$(if command -v tar >/dev/null 2>&1; then echo true; else echo false; fi)
-  echo "tar-installed=${tar_installed}" >> "$GITHUB_OUTPUT"
-
-  bin_installed="false"
+  # jolie
+  jolie_installed="false"
   if command -v jolie >/dev/null 2>&1; then
-    if [ "${input_force}" = "false" ]; then
-      msg="Installation skipped."
-      bin_installed="true"
-    else
+    if [ "${input_jolie_installation_mode}" = "always" ]; then
       msg="Executing forced installation."
+    else
+      msg="Installation skipped."
+      jolie_installed="true"
     fi
-    log_info "Jolie is found at $(which jolie). ${msg}"
+    log_info "jolie is found at $(which jolie). ${msg}"
   else
-    log_info "Jolie is not found. Executing installation."
+    if [ "${input_jolie_installation_mode}" = "skip" ]; then
+      msg="Installation skipped anyway."
+      jolie_installed="true"
+    else
+      msg="Executing installation."
+    fi
+    log_info "jolie is not found. ${msg}"
   fi
-  echo "bin-installed=${bin_installed}" >> "$GITHUB_OUTPUT"
+  echo "jolie-installed=${jolie_installed}" >> "$GITHUB_OUTPUT"
 
-  bin_dir="jolie_$(date +%s)"
-  echo "bin-dir=${bin_dir}" >> "$GITHUB_OUTPUT"
+  jolie_dir="jolie_$(date +%s)"
+  echo "jolie-dir=${jolie_dir}" >> "$GITHUB_OUTPUT"
 
-  bin_path="$GITHUB_WORKSPACE/${bin_dir}"
-  echo "bin-path=${bin_path}" >> "$GITHUB_OUTPUT"
+  jolie_path="$GITHUB_WORKSPACE/${jolie_dir}"
+  echo "jolie-path=${jolie_path}" >> "$GITHUB_OUTPUT"
+
+  # jpm
+  jpm_installed="false"
+  if command -v jpm >/dev/null 2>&1; then
+    if [ "${input_jpm_installation_mode}" = "always" ]; then
+      msg="Executing forced installation."
+    else
+      msg="Installation skipped."
+      jpm_installed="true"
+    fi
+    log_info "jpm is found at $(which jpm). ${msg}"
+  else
+    if [ "${input_jpm_installation_mode}" = "skip" ]; then
+      msg="Installation skipped anyway."
+      jpm_installed="true"
+    else
+      msg="Executing installation."
+    fi
+    log_info "jpm is not found. ${msg}"
+  fi
+  echo "jpm-installed=${jpm_installed}" >> "$GITHUB_OUTPUT"
 }
 
 main "$@"

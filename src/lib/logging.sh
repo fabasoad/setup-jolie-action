@@ -13,6 +13,6 @@ log_info() {
   log "info" "${1}"
 }
 
-log_debug() {
-  log "debug" "${1}"
+log_warning() {
+  log "warning" "${1}"
 }
