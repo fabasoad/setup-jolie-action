@@ -66,7 +66,7 @@ _setup_npm() {
     curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell --install-dir "${fnm_bin_dir}"
     ${fnm_bin_dir}/fnm install --lts
     node --version || echo 'failed 1'
-    ${fnm_bin_dir}/fnm use
+    ${fnm_bin_dir}/fnm env
     node --version || echo 'failed 2'
   fi
 }
