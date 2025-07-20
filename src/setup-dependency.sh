@@ -61,10 +61,10 @@ _setup_npm() {
   else
     _setup_bash
     _setup_curl
-    fnm_bin_dir="${RUNNER_TEMP}/fnm_$(date +%s)"
-    mkdir -p "${fnm_bin_dir}"
-    curl -o- https://fnm.vercel.app/install | bash -s -- --install-dir "${fnm_bin_dir}"
-    fnm install --lts
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    . "$HOME/.nvm/nvm.sh"
+    nvm install --lts
+    nvm use --lts
   fi
 }
 
