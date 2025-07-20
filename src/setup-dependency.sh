@@ -5,6 +5,7 @@ _update() {
     if [ "${OS}" = "Alpine" ]; then
       apk update
     elif [ "${OS}" = "Linux" ]; then
+      apt update
       apt-get update
     fi
     echo "SETUP_JOLIE_ACTION_UPDATE=true" >> "$GITHUB_ENV"
@@ -54,17 +55,14 @@ _setup_unzip() {
 }
 
 _setup_npm() {
-  if [ "${OS}" = "macOS" ]; then
+  if [ "${OS}" = "Alpine" ]; then
+    apk add --update npm
+  elif [ "${OS}" = "Linux" ]; then
+    apt install nodejs
+  elif [ "${OS}" = "macOS" ]; then
     brew install node
   elif [ "${OS}" = "Windows" ]; then
     choco install nodejs
-  else
-    _setup_bash
-    _setup_curl
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    . "$HOME/.nvm/nvm.sh"
-    nvm install --lts
-    nvm use --lts
   fi
 }
 
