@@ -7,7 +7,7 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 . "${LIB_DIR_PATH}/logging.sh"
 
 main() {
-  input_force="${1}"
+  input_jolie_installation_mode="${1}"
 
   os="${RUNNER_OS}"
   if [ "${os}" = "Linux" ]; then
@@ -39,25 +39,31 @@ main() {
   unzip_installed=$(if command -v unzip >/dev/null 2>&1; then echo true; else echo false; fi)
   echo "unzip-installed=${unzip_installed}" >> "$GITHUB_OUTPUT"
 
-  bin_installed="false"
+  jolie_installed="false"
   if command -v jolie >/dev/null 2>&1; then
-    if [ "${input_force}" = "false" ]; then
-      msg="Installation skipped."
-      bin_installed="true"
-    else
+    if [ "${input_jolie_installation_mode}" = "always" ]; then
       msg="Executing forced installation."
+    else
+      msg="Installation skipped."
+      jolie_installed="true"
     fi
     log_info "Jolie is found at $(which jolie). ${msg}"
   else
-    log_info "Jolie is not found. Executing installation."
+    if [ "${input_jolie_installation_mode}" = "skip" ]; then
+      msg="Installation skipped anyway."
+      jolie_installed="true"
+    else
+      msg="Executing installation."
+    fi
+    log_info "Jolie is not found. ${msg}"
   fi
-  echo "bin-installed=${bin_installed}" >> "$GITHUB_OUTPUT"
+  echo "jolie-installed=${jolie_installed}" >> "$GITHUB_OUTPUT"
 
-  bin_dir="jolie_$(date +%s)"
-  echo "bin-dir=${bin_dir}" >> "$GITHUB_OUTPUT"
+  jolie_dir="jolie_$(date +%s)"
+  echo "jolie-dir=${jolie_dir}" >> "$GITHUB_OUTPUT"
 
-  bin_path="$GITHUB_WORKSPACE/${bin_dir}"
-  echo "bin-path=${bin_path}" >> "$GITHUB_OUTPUT"
+  jolie_path="$GITHUB_WORKSPACE/${jolie_dir}"
+  echo "jolie-path=${jolie_path}" >> "$GITHUB_OUTPUT"
 }
 
 main "$@"

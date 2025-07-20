@@ -52,7 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu", "windows", "macos"]
-        version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
+        jolie-version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
         id: setup-jolie
         uses: ./
         with:
-          version: ${{ matrix.version }}
+          jolie-version: ${{ matrix.jolie-version }}
       - name: Test action completion
         run: |
           test_equal() {
@@ -70,7 +70,7 @@ jobs:
             fi
           }
           test_equal "jolie should be installed" \
-            "${{ steps.setup-jolie.outputs.installed }}" \
+            "${{ steps.setup-jolie.outputs.jolie-installed }}" \
             "true"
       - name: Print version
         run: jolie --version
@@ -99,18 +99,18 @@ jobs:
             fi
           }
           test_equal "jolie should be installed" \
-            "${{ steps.setup-jolie.outputs.installed }}" \
+            "${{ steps.setup-jolie.outputs.jolie-installed }}" \
             "true"
       - name: Print version
         run: jolie --version
-  test-force:
-    name: Test force
+  test-jolie-installation-mode:
+    name: Test jolie installation mode
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        force: ["true", "false"]
+        jolie-installation-mode: ["skip", "skip-if-exists", "always"]
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
@@ -118,13 +118,12 @@ jobs:
         id: setup-jolie-1
         uses: ./
         with:
-          version: "1.13.1"
+          jolie-installation-mode: "${{ matrix.jolie-installation-mode }}"
       - name: Setup Jolie 2
         id: setup-jolie-2
         uses: ./
         with:
-          version: "1.13.1"
-          force: ${{ matrix.force }}
+          jolie-installation-mode: "${{ matrix.jolie-installation-mode }}"
       - name: Test action completion
         run: |
           test_equal() {
@@ -133,9 +132,9 @@ jobs:
               exit 1
             fi
           }
-          test_equal "Wrong \"installed\" output from setup-jolie-1" \
-            "${{ steps.setup-jolie-1.outputs.installed }}" \
-            "true"
-          test_equal "Wrong \"installed\" output from setup-jolie-2" \
-            "${{ steps.setup-jolie-2.outputs.installed }}" \
-            "${{ matrix.force }}"
+          test_equal "Wrong \"jolie-installed\" output from setup-jolie-1" \
+            "${{ steps.setup-jolie-1.outputs.jolie-installed }}" \
+            "${{ matrix.jolie-installation-mode != 'skip' }}"
+          test_equal "Wrong \"jolie-installed\" output from setup-jolie-2" \
+            "${{ steps.setup-jolie-2.outputs.jolie-installed }}" \
+            "${{ matrix.jolie-installation-mode == 'always' }}"
