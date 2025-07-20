@@ -20,7 +20,6 @@ defaults:
     shell: sh
 
 jobs:
-  # TODO: Add matrix tests for jpm-version
   get-jolie-versions:
     name: Get 3 latest jolie versions
     if: false
@@ -81,6 +80,65 @@ jobs:
             "false"
       - name: Print version
         run: jolie --version
+  get-jpm-versions:
+    name: Get 3 latest jpm versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      versions: ${{ steps.prepare-list.outputs.versions }}
+    steps:
+      - name: Get releases
+        id: github-releases
+        uses: yakubique/github-releases@v1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repository: "jolie/jpm"
+          sort: "desc"
+      - name: Prepare list
+        id: prepare-list
+        env:
+          RELEASES_AMOUNT: "3"
+        run: |
+          versions=$(echo '${{ steps.github-releases.outputs.releases }}' \
+            | jq -c -r --arg n "${RELEASES_AMOUNT}" '.[0:($n | tonumber)] | map(sub("^v"; "")) | . += ["latest"]')
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
+  setup-jpm:
+    name: Setup jpm
+    if: false
+    needs: [get-jpm-versions]
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu", "windows", "macos"]
+        jpm-version: ${{ fromJSON(needs.get-jpm-versions.outputs.versions) }}
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Jolie
+        id: setup-jolie
+        uses: ./
+        with:
+          jpm-version: ${{ matrix.jpm-version }}
+          jolie-installation-mode: "skip"
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "jpm should be installed" \
+            "${{ steps.setup-jolie.outputs.jpm-installed }}" \
+            "true"
+          test_equal "jolie should not be installed" \
+            "${{ steps.setup-jolie.outputs.jolie-installed }}" \
+            "false"
+      - name: Print version
+        run: jpm --version
   setup-jolie-jpm-in-container:
     name: Setup jolie & jpm in container (${{ matrix.image }}, latest)
     runs-on: ubuntu-latest
