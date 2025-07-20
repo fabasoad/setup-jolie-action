@@ -58,7 +58,10 @@ _setup_npm() {
   if [ "${OS}" = "Alpine" ]; then
     apk add --update npm
   elif [ "${OS}" = "Linux" ]; then
-    apt install npm -y
+    _setup_curl
+    curl -sL https://deb.nodesource.com/setup_24.x -o ${RUNNER_TEMP}/nodesource_setup.sh
+    ${RUNNER_TEMP}/nodesource_setup.sh
+    apt install nodejs -y
   elif [ "${OS}" = "macOS" ]; then
     brew install node
   elif [ "${OS}" = "Windows" ]; then
