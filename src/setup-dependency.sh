@@ -61,8 +61,10 @@ _setup_npm() {
   else
     _setup_bash
     _setup_curl
-    curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell
-    $HOME/.local/share/fnm install --lts
+    fnm_bin_dir="${RUNNER_TEMP}/fnm_$(date +%s)"
+    mkdir -p "${fnm_bin_dir}"
+    curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell --install-dir "${fnm_bin_dir}"
+    ${fnm_bin_dir}/fnm install --lts
   fi
 }
 
