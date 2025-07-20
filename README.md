@@ -1,4 +1,4 @@
-# Setup Jolie action
+# Setup jolie action
 
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 ![Release](https://img.shields.io/github/v/release/fabasoad/setup-jolie-action?include_prereleases)
@@ -6,7 +6,7 @@
 ![security](https://github.com/fabasoad/setup-jolie-action/actions/workflows/security.yml/badge.svg)
 ![linting](https://github.com/fabasoad/setup-jolie-action/actions/workflows/linting.yml/badge.svg)
 
-This action installs [Jolie](https://www.jolie-lang.org) and [JPM](https://www.npmjs.com/package/@jolie/jpm).
+This action installs [jolie](https://www.jolie-lang.org) and [JPM](https://www.npmjs.com/package/@jolie/jpm).
 
 ## Supported OS
 
@@ -27,7 +27,7 @@ None.
 ```yaml
 - uses: fabasoad/setup-jolie-action@v1
   with:
-    # (Optional) Jolie version. Defaults to the latest version.
+    # (Optional) jolie version. Defaults to the latest version.
     jolie-version: "latest"
     # (Optional) Dictates the installation process for jolie. There are 3 options:
     # "skip" - does not install jolie; "idempotent" - installs only if jolie
@@ -63,15 +63,17 @@ None.
 ### Workflow configuration
 
 ```yaml
-- uses: fabasoad/setup-jolie-action@v0
-- run: jolie --version
+- uses: fabasoad/setup-jolie-action@v1
+- run: |
+    jolie --version
+    jpm --version
 ```
 
 ### Result
 
 ```shell
-Run jolie --version
 Jolie 1.13.0-git  (C) 2006-2025 the Jolie developers
+@jolie/jpm/3.1.0 linux-x64 node-v20.19.3
 ```
 
 ## Contributions

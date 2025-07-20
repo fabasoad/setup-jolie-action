@@ -176,7 +176,7 @@ runs:
     - name: Print jolie version
       env:
         INPUT_JOLIE_INSTALLATION_MODE: "${{ inputs.jolie-installation-mode }}"
-      run: ./print-jolie-version.sh "${INPUT_JOLIE_INSTALLATION_MODE}"
+      run: ./print-version.sh "jolie" "${INPUT_JOLIE_INSTALLATION_MODE}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
@@ -206,6 +206,6 @@ runs:
     - name: Print jpm version
       env:
         INPUT_JPM_INSTALLATION_MODE: "${{ inputs.jpm-installation-mode }}"
-      run: ./print-jpm-version.sh "${INPUT_JPM_INSTALLATION_MODE}"
+      run: ./print-version.sh "jpm" "${INPUT_JPM_INSTALLATION_MODE}"
       shell: sh
       working-directory: "${{ github.action_path }}/src"

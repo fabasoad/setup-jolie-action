@@ -22,7 +22,6 @@ defaults:
 jobs:
   get-jolie-versions:
     name: Get 3 latest jolie versions
-    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -46,7 +45,6 @@ jobs:
           echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   setup-jolie:
     name: Setup jolie
-    if: false
     needs: [get-jolie-versions]
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 10
@@ -58,7 +56,7 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
-      - name: Setup Jolie
+      - name: Setup jolie
         id: setup-jolie
         uses: ./
         with:
@@ -113,7 +111,7 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
-      - name: Setup Jolie
+      - name: Setup jolie
         id: setup-jolie
         uses: ./
         with:
@@ -148,7 +146,7 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
-      - name: Setup Jolie
+      - name: Setup jolie
         id: setup-jolie
         uses: ./
       - name: Test action completion
@@ -180,13 +178,13 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
-      - name: Setup Jolie 1
+      - name: Setup jolie 1
         id: setup-jolie-1
         uses: ./
         with:
           jolie-installation-mode: "${{ matrix.installation-mode }}"
           jpm-installation-mode: "${{ matrix.installation-mode }}"
-      - name: Setup Jolie 2
+      - name: Setup jolie 2
         id: setup-jolie-2
         uses: ./
         with:
