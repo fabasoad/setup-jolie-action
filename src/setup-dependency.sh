@@ -62,6 +62,7 @@ _setup_npm() {
     _setup_bash
     _setup_curl
     curl -o- https://fnm.vercel.app/install | bash -s -- --skip-shell
+    fnm install --lts
   fi
 }
 
