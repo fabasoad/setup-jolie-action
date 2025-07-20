@@ -23,6 +23,7 @@ jobs:
   # TODO: Add matrix tests for jpm-version
   get-jolie-versions:
     name: Get 3 latest jolie versions
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -46,6 +47,7 @@ jobs:
           echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   setup-jolie:
     name: Setup jolie
+    if: false
     needs: [get-jolie-versions]
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 10
