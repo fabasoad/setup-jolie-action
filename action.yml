@@ -162,5 +162,7 @@ runs:
     # Windows: Completed
 
     - name: Print version
-      run: jolie --version
+      run: |
+        which jolie
+        jolie --version
       shell: sh
