@@ -151,7 +151,7 @@ runs:
 
     - name: Download jolie (Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os == 'Windows'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: "jolie/jolie"
         ref: ${{ format('v{0}', inputs.jolie-version == 'latest' && steps.latest-jolie-release.outputs.version || inputs.jolie-version) }}

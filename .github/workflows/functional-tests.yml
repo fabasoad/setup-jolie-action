@@ -55,7 +55,7 @@ jobs:
         jolie-version: ${{ fromJSON(needs.get-jolie-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup jolie
         id: setup-jolie
         uses: ./
@@ -110,7 +110,7 @@ jobs:
         jpm-version: ${{ fromJSON(needs.get-jpm-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup jolie
         id: setup-jolie
         uses: ./
@@ -145,7 +145,7 @@ jobs:
         image: ["alpine", "ubuntu"]
     steps:
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup jolie
         id: setup-jolie
         uses: ./
@@ -177,7 +177,7 @@ jobs:
         installation-mode: ["skip", "idempotent", "always"]
     steps:
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup jolie 1
         id: setup-jolie-1
         uses: ./
