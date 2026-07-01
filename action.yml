@@ -39,7 +39,7 @@ inputs:
 outputs:
   jolie-installed:
     description: Whether jolie was installed or not.
-    value: "${{ (runner.os == 'Windows' && steps.install-jolie-windows.outcome || steps.install-jolie-not-windows.outcome) == 'success' }}"
+    value: "${{ case(runner.os == 'Windows', steps.install-jolie-windows.outcome, steps.install-jolie-not-windows.outcome) == 'success' }}"
   jpm-installed:
     description: Whether jpm was installed or not
     value: "${{ steps.install-jpm.outcome == 'success' }}"
@@ -151,10 +151,10 @@ runs:
 
     - name: Download jolie (Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os == 'Windows'
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
       with:
         repository: "jolie/jolie"
-        ref: ${{ format('v{0}', inputs.jolie-version == 'latest' && steps.latest-jolie-release.outputs.version || inputs.jolie-version) }}
+        ref: ${{ format('v{0}', case(inputs.jolie-version == 'latest', steps.latest-jolie-release.outputs.version, inputs.jolie-version)) }}
         fetch-depth: 1
         path: ${{ steps.info.outputs.jolie-dir }}
         token: "${{ inputs.github-token }}"

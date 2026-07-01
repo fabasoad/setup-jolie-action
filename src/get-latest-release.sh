@@ -13,7 +13,7 @@ main() {
   version=$(curl -sL \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${token}" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
+    -H "X-GitHub-Api-Version: 2026-03-10" \
     "https://api.github.com/repos/${repo}/releases/latest" \
     | jq -r '.tag_name | sub("^v"; "")')
   log_info "Successfully retrieved ${GITHUB_SERVER_URL}/${repo} latest version: ${version}"
