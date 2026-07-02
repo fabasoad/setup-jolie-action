@@ -117,11 +117,10 @@ runs:
       if: steps.info.outputs.jolie-installed == 'false' && runner.os != 'Windows'
       id: install-jolie-not-windows
       env:
-        JAR_FILE: "${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }}"
         JOLIE_DIR: "${{ steps.info.outputs.jolie-dir }}"
       run: |
         java \
-          -jar "${JAR_FILE}" \
+          -jar "${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }}" \
           -jh "${GITHUB_ACTION_PATH}/jolie/${JOLIE_DIR}/dist" \
           -jl "${GITHUB_ACTION_PATH}/jolie/launchers"
         echo "JOLIE_HOME=${GITHUB_ACTION_PATH}/jolie/${JOLIE_DIR}/dist" >> "$GITHUB_ENV"
