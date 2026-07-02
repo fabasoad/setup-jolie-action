@@ -58,6 +58,14 @@ jobs:
         os: ["ubuntu", "windows", "macos"]
         jolie-version: ${{ fromJSON(needs.get-jolie-versions.outputs.versions) }}
     steps:
+      - name: Clean up lingering sockets (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          # Close any processes holding ports 10101, 10102, etc.
+          Get-NetTCPConnection -LocalPort 10101 -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          Get-NetTCPConnection -LocalPort 10102 -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 2
+        shell: pwsh
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v7
         with:
