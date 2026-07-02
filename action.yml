@@ -39,7 +39,7 @@ inputs:
 outputs:
   jolie-installed:
     description: Whether jolie was installed or not.
-    value: "${{ (runner.os == 'Windows' && steps.install-jolie-windows.outcome || steps.install-jolie-not-windows.outcome) == 'success' }}"
+    value: "${{ case(runner.os == 'Windows', steps.install-jolie-windows.outcome, steps.install-jolie-not-windows.outcome) == 'success' }}"
   jpm-installed:
     description: Whether jpm was installed or not
     value: "${{ steps.install-jpm.outcome == 'success' }}"
@@ -104,7 +104,7 @@ runs:
     - name: Download jolie (not Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os != 'Windows'
       id: download-jolie
-      uses: robinraju/release-downloader@v1
+      uses: robinraju/release-downloader@28fc21f50d76778e7023361aa1f863e717d3d56f # v1.13
       with:
         repository: "jolie/jolie"
         tag: "${{ format('v{0}', inputs.jolie-version) }}"
@@ -116,12 +116,14 @@ runs:
     - name: Install jolie (not Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os != 'Windows'
       id: install-jolie-not-windows
+      env:
+        JOLIE_DIR: "${{ steps.info.outputs.jolie-dir }}"
       run: |
         java \
-          -jar ${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }} \
-          -jh ${GITHUB_ACTION_PATH}/jolie/${{ steps.info.outputs.jolie-dir }}/dist \
-          -jl ${GITHUB_ACTION_PATH}/jolie/launchers
-        echo "JOLIE_HOME=${GITHUB_ACTION_PATH}/jolie/${{ steps.info.outputs.jolie-dir }}/dist" >> "$GITHUB_ENV"
+          -jar "${{ fromJson(steps.download-jolie.outputs.downloaded_files)[0] }}" \
+          -jh "${GITHUB_ACTION_PATH}/jolie/${JOLIE_DIR}/dist" \
+          -jl "${GITHUB_ACTION_PATH}/jolie/launchers"
+        echo "JOLIE_HOME=${GITHUB_ACTION_PATH}/jolie/${JOLIE_DIR}/dist" >> "$GITHUB_ENV"
         echo "${GITHUB_ACTION_PATH}/jolie/launchers" >> "$GITHUB_PATH"
       shell: sh
     # Linux, macOS: Completed
@@ -138,7 +140,7 @@ runs:
 
     - name: Setup jq
       if: steps.info.outputs.jolie-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
-      uses: dcarbone/install-jq-action@v3
+      uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
     - name: Get latest jolie release
       if: steps.info.outputs.jolie-installed == 'false' && inputs.jolie-version == 'latest' && runner.os == 'Windows'
@@ -151,13 +153,14 @@ runs:
 
     - name: Download jolie (Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os == 'Windows'
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
       with:
         repository: "jolie/jolie"
-        ref: ${{ format('v{0}', inputs.jolie-version == 'latest' && steps.latest-jolie-release.outputs.version || inputs.jolie-version) }}
+        ref: ${{ format('v{0}', case(inputs.jolie-version == 'latest', steps.latest-jolie-release.outputs.version, inputs.jolie-version)) }}
         fetch-depth: 1
         path: ${{ steps.info.outputs.jolie-dir }}
         token: "${{ inputs.github-token }}"
+        persist-credentials: "false"
 
     - name: Install jolie (Windows)
       if: steps.info.outputs.jolie-installed == 'false' && runner.os == 'Windows'
